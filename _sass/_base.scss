@@ -39,7 +39,7 @@ body {
   h1 {
     font-weight: 600;
     font-family: SimHei;
-    color: rgb(195,117,227);
+    color: $h1-color;
   }
 
   h2 {
@@ -47,7 +47,7 @@ body {
     font-size: 1.6em;
     margin-bottom: 0.6em;
     font-family: SimHei;
-    color: rgb(195,117,227);
+    color: $h2-color;
   }
 
   h3 {
@@ -57,7 +57,7 @@ body {
     font-weight: bold;
     letter-spacing: 0.15em;
     font-family: SimHei;
-    color: rgb(195,117,227);
+    color: $h3-color;
   }
 }
 

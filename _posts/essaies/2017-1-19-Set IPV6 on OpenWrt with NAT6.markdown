@@ -171,7 +171,6 @@ chmod +x /etc/init.d/aria2
 访问[WebUI](http://dy.ghostry.cn/)或者[Aria2 Web Interface](https://qcloud.kohill.cn/aria2/)即可看到控制台，注意https下Chrome可能会拦截与路由器（http://192.168.1.1:6800） 之间的非安全连接，请手动允许。<br>
 　　配置文件解释:[aria2 Documation](https://aria2.github.io/manual/en/html/aria2c.html#cmdoption-V)。<br>
 <img src="{{ site.github_cdn_prefix }}/screenshots/2017-2-15 0000.jpg" class="img-responssive"><br>
-<img src="{{ site.github_cdn_prefix }}/screenshots/2017-2-13 0000.jpg" class="img-responssive"><br>
 
 ## Some IPv6 sites
 

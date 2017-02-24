@@ -165,13 +165,22 @@ config tinyproxy
         option MaxRequestsPerChild '0'
         option ViaProxyName 'tinyproxy'
         option enabled '1'
-        option LogLevel 'Critical'
         option User 'root'
-        option Listen '192.168.1.1'
-        option Bind '::'
+        option Listen '0.0.0.0'
         option Syslog '1'
         option Group 'nogroup'
-        list Allow '192.168.0.0/16'
+        list Allow '::ffff:0:0/96'
         list ConnectPort '0'
-        list ConnectPort '0'
+        list ConnectPort 443
+        list ConnectPort 563
+```
+
+### 利用ip6tables 设置NAT6
+
+```bash
+LAN_ULA_PREFIX=$(uci get network.globals.ula_prefix)
+WAN6_INTERFACE='pppoe-wan'
+WAN6_GATEWAY=$(route -A inet6 -e | grep "pppoe-wan" | awk '/::\/0/{print $2; exit}')
+ip6tables -t nat -I POSTROUTING -s "$LAN_ULA_PREFIX" -o "$WAN6_INTERFACE" -j MASQUERADE
+route -A inet6 add 2000::/3 gw "$WAN6_GATEWAY" dev "$WAN6_INTERFACE"
 ```

@@ -19,6 +19,12 @@ $bg-color-darker:  darken($background-color, 6%);
 $main-border-color: lighten($background-color, 6%);
 $alt-text-color:   rgb(82,177,197);
 $subdued-border:   rgb(81,136,255);
+$h1-color:         rgb(212,98,82);
+$h2-color:         rgb(212,98,82);
+$h3-color:         rgb(212,98,82);
+$h4-color:         rgb(212,98,82);
+
 // Import partials from `sass_dir` (defaults to `_sass`)
+
 @import "base",  "syntax-highlighting"
 ;

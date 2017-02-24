@@ -7,10 +7,16 @@ external-url:
 categories: 杂文
 ---
 <br>
-<div id="toc"></div>
+<div id="dw__toc" style="width:300px;float:right;margin-left:10px">
+    <h3 class="toggle open" style="cursor: pointer;"><strong><span>−</span></strong>Table of Contents</h3>
+    <div aria-expanded="true" style="display: block;">
+        <div id="toc"></div>
+    </div>
+</div>
+
 　　本文只是笔记，所述内容仅供参考，大部分未经测试。
 
-### OpenWrt获取源码
+### OpenWrt获取源码（已测试）
 　　[访问https://dev.openwrt.org/wiki/GetSource](https://dev.openwrt.org/wiki/GetSource)。
 
 ### 列出所有监听的端口（已测试）
@@ -95,10 +101,10 @@ ip6tables -A INPUT -i wan+ -p tcp --dport 51413 -j LOG --log-prefix "ip6tables_5
 ip6tables -A INPUT -i wan+ -p udp --dport 51413 -j LOG --log-prefix "ip6tables_51413_udp_alert" --log-level debug
 ```
 
-### 重启防火墙
+### 重启防火墙(测试成功)
 `/etc/init.d/firewall restart`
 
-### 利用curl获取IP
+### 利用curl获取IP(测试成功)
 
 ```
 #get IPv4 address
@@ -107,7 +113,7 @@ echo `curl -4 -s icanhazip.com`
 echo `curl -6 -s icanhazip.com`
 ```
 
-### 利用iptables实现port forwarding
+### 利用iptables实现port forwarding(测试成功)
 开启端口转发功能，编辑/etc/sysctl.conf，使net.ipv4.ip_forward=1，随后`sysctl -p`。
 
 ```bash
@@ -116,21 +122,56 @@ dest_port_wan=6800
 dest_port_lan=6800
 dest_addr_lan=192.168.1.1
 
-#remove forwarding rule
-iptables -t nat -D PREROUTING  -p tcp -m tcp -d $wan_addr --dport     $dest_port_wan -j DNAT --to-destination $dest_addr_lan:$dest_port_lan
-iptables -D FORWARD -m state -p tcp -d $dest_addr_lan --dport     $dest_port_lan --state NEW,ESTABLISHED,RELATED -j ACCEPT
-iptables -t nat -D POSTROUTING -p tcp -m tcp -s $dest_addr_lan --sport     $dest_port_lan -j SNAT --to-source $wan_addr
-
 #add forwarding rule
 iptables -t nat -A PREROUTING  -p tcp -m tcp -d $wan_addr --dport     $dest_port_wan -j DNAT --to-destination $dest_addr_lan:$dest_port_lan
 iptables -A FORWARD -m state -p tcp -d $dest_addr_lan --dport     $dest_port_lan --state NEW,ESTABLISHED,RELATED -j ACCEPT
 iptables -t nat -A POSTROUTING -p tcp -m tcp -s $dest_addr_lan --sport $dest_port_lan -j SNAT --to-source $wan_addr
 
+#remove forwarding rule
+iptables -t nat -D PREROUTING  -p tcp -m tcp -d $wan_addr --dport     $dest_port_wan -j DNAT --to-destination $dest_addr_lan:$dest_port_lan
+iptables -D FORWARD -m state -p tcp -d $dest_addr_lan --dport     $dest_port_lan --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -t nat -D POSTROUTING -p tcp -m tcp -s $dest_addr_lan --sport     $dest_port_lan -j SNAT --to-source $wan_addr
 ```
 
 ### 关于iptable的一个性能问题(blocking packets it shouldn't be)
 [Why is UFW/iptables blocking packets it shouldn't be?](http://www.linuxquestions.org/questions/linux-networking-3/why-is-ufw-iptables-blocking-packets-it-shouldn%27t-be-4175500239/)
 
-
-## 删除LUCI缓存
+### 删除LUCI缓存（已测试）
 rm /tmp/luci-indexcache
+
+### 安装支持IPv6的http代理
+
+```bash
+opkg update
+opkg install tinyproxy luci-app-tinyproxy
+uci set tinyproxy.@tinyproxy[0].enabled=1
+uci commit
+/etc/init.d/tinyproxy enable
+/etc/init.d/tinyproxy restart
+rm /tmp/luci-indexcache
+```
+参考配置文件：
+
+```bash
+config tinyproxy
+        option Port '8888'
+        option Timeout '600'
+        option DefaultErrorFile '/usr/share/tinyproxy/default.html'
+        option StatFile '/usr/share/tinyproxy/stats.html'
+        option MaxClients '100'
+        option MinSpareServers '5'
+        option MaxSpareServers '20'
+        option StartServers '10'
+        option MaxRequestsPerChild '0'
+        option ViaProxyName 'tinyproxy'
+        option enabled '1'
+        option LogLevel 'Critical'
+        option User 'root'
+        option Listen '192.168.1.1'
+        option Bind '::'
+        option Syslog '1'
+        option Group 'nogroup'
+        list Allow '192.168.0.0/16'
+        list ConnectPort '0'
+        list ConnectPort '0'
+```

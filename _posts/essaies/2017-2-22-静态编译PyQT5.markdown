@@ -1,0 +1,59 @@
+---
+layout: post
+title: 静态编译PyQt5
+date: 2017-2-22 19:40
+comments: true
+external-url:
+categories: 杂文
+---
+<br>
+
+主要参考来源：<http://pyqt.sourceforge.net/Docs/pyqtdeploy/static_builds.html><br>
+PyQt5源码下载：<https://sourceforge.net/projects/pyqt/files/PyQt5/><br>
+SIP源码下载：<https://www.riverbankcomputing.com/software/sip/download><br>
+Python源码下载：https://www.python.org/downloads/source/<br>
+
+*需首先编译QT的静态链接版本<br>*
+搭配：VS2015+Python 3.6.0+PyQt5.7.1+Qt5.7-static-msvc2015+sip-1.19.1
+
+### 编译python
+
+```bash
+pip install pyqtdeploy
+
+cd ./Python-3.6.0
+pyqtdeploycli --package python --target win-32 configure
+qmake SYSROOT=D:\Qt\SYSROOT
+nmake
+nmake install
+cd ..
+```
+
+###  编译sip
+确保环境变量中的SIP大于1.19,否则用需首先编译二进制版本
+
+```bash
+cd ./sip-4.19.1
+pyqtdeploycli --package sip --target win-32 configure
+python configure.py --static --sysroot=D:/Qt/SYSROOT --no-tools --use-qmake --configuration=sip-win.cfg
+qmake
+nmake
+nmake install
+cd ..
+```
+
+### 编译PyQt
+这一步时间比较长，大概半小时左右
+
+```Makefile
+SYSROOT  =  D://Qt/SYSROOT
+SIPDIR = sip-4.19.1
+pyqt:
+	cd ./PyQt5_gpl-5.7.1 && \
+	pyqtdeploycli --package pyqt5 --target win-32 configure && \
+	notepad pyqt5-win.cfg && \
+	python configure.py --static --sysroot=$(SYSROOT) --sip=$(SYSROOT)/bin/sip.exe --no-tools --no-qsci-api --no-designer-plugin --no-qml-plugin --configuration=pyqt5-win.cfg && \
+	qmake SYSROOT=$(SYSROOT)	 && \
+	nmake && \
+	nmake install
+```

@@ -1,0 +1,54 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="theme-color" content="hsl(35, 36%, 95%)">
+  <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
+  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+
+  {% capture description %}{% if page.description %}{{ page.description }}{% elsif page.title %}{{ content | raw_content }}{% else %}{{ site.description }}{% endif %}{% endcapture %}
+  <meta name="description" content="{{ description | strip_html | condense_spaces | truncate:150 }}" />
+
+  {% capture keywords %}{% if page.keywords %}{{ page.keywords }}{% elsif page.title %}{{""}}{% else %}{{ site.keywords }}{% endif %}{% endcapture %}
+  <meta name="keywords" content="{{ keywords | strip_html | condense_spaces }}" />
+
+  <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" />
+  <span itemprop='author'><meta name="author" content="{{ site.author }}"><span itemprop='author'></span>
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="stylesheet" href="//brick.a.ssl.fastly.net/PT+Serif:400,400i,700,700i:f/Source+Code+Pro:400,600:f">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
+  <script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdn.rawgit.com/kohillyang/personal-blog/master/assets/js/toc.js"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+
+      TeX: {
+        equationNumbers: { autoNumber: "AMS" }
+      },
+
+      CommonHTML: {
+        scale: 90
+      }
+    };
+  </script>
+
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  <div class="container" style="text-align:center">
+    <div class="navbar" style="margin-bottom:0;border:0">
+    <ul class="navbar-nav nav header-nav">
+    <li><a href="/index.html" class="button nav-button">Home</a></li>
+	  <li><a href="/translations" class="button nav-button">Translations</a></li>
+    <li><a href="/paints" class="button nav-button">Paints</a></li>
+    <li><a href="/projects/index.html" class="button nav-button">Projects</a></li>
+    </ul>
+    </div>
+  </div>
+</head>

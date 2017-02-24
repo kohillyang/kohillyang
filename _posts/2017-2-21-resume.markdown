@@ -1,0 +1,70 @@
+---
+layout: post
+title: Resume
+date: 2017-02-20 01:12
+comments: true
+external-url:
+categories: Projects
+permalink: /aboutme/index.html
+---
+
+<link rel="stylesheet" href="http://qcloud.kohill.cn/galleries/css/blueimp-gallery.css">
+<link rel="stylesheet" href="http://qcloud.kohill.cn/galleries/css/blueimp-gallery-indicator.css">
+<link rel="stylesheet" href="http://qcloud.kohill.cn/galleries/css/blueimp-gallery-video.css">
+
+<script src="http://qcloud.kohill.cn/galleries/js/blueimp-helper.js"></script>
+<script src="http://qcloud.kohill.cn/galleries/js/blueimp-gallery.js"></script>
+<script src="http://qcloud.kohill.cn/galleries/js/blueimp-gallery-fullscreen.js"></script>
+<script src="http://qcloud.kohill.cn/galleries/js/blueimp-gallery-indicator.js"></script>
+<script src="http://qcloud.kohill.cn/galleries/js/blueimp-gallery-video.js"></script>
+<script src="http://qcloud.kohill.cn/galleries/js/blueimp-gallery-vimeo.js"></script>
+<script src="http://qcloud.kohill.cn/galleries/js/blueimp-gallery-youtube.js"></script>
+<script src="http://qcloud.kohill.cn/galleries/js/vendor/jquery.js"></script>
+<script src="http://qcloud.kohill.cn/galleries/js/jquery.blueimp-gallery.js"></script>
+
+
+
+## 项目经验：
+
+1. 四轴飞行器（包括上位机以及飞行器控制程序）
+<br>
+<img src="{{ site.github_cdn_prefix }}/screenshots/2017-2-20 0004.jpg" class="img-responsive" style="width:45%;margin-left:5%;float:left"/>
+<img src="{{ site.github_cdn_prefix }}/screenshots/2017-2-20 0008.jpg" class="img-responsive" style="width:45%;margin-left:2%"/><br>
+
+2. 激光点云三维地图重现
+<br>
+<img src="{{ site.github_cdn_prefix }}/screenshots/2017-2-20 0005.jpg" class="img-responsive" style="width:30%;margin-left:3%;float:left"/><img src="{{ site.github_cdn_prefix }}/screenshots/2017-2-20 0006.jpg" class="img-responsive" style="width:30%;margin-left:3%;float:left"/><img src="{{ site.github_cdn_prefix }}/screenshots/2017-2-20 0007.jpg" class="img-responsive" style="width:30%;margin-left:3%"/>
+
+4. SamartCameraRead
+<img class="img-responsive" src="http://ok0rtur47.bkt.clouddn.com/2017-1-11-image002.jpg" style="width:85%;margin-left:3%"/>
+
+5. Aria2Client
+<img src="{{ site.github_cdn_prefix }}/screenshots/2017-2-20 0000.jpg" class="img-responsive" style="width:90%"/><br>
+
+6. 基于STM32的手持式示波器
+<img class="img-responsive" src="{{ site.github_cdn_prefix }}/screenshots/2017-2-20 0009.jpg" style="width:85%;margin-left:3%"/>
+
+7. 其它
+<br>
+基于FPGA的高精度高速频率测量仪(最大测量频率100MHZ，脉宽精度5ns，上升时间测量精度10ns）<br>
+AGC放大器
+<div id="blueimp-video-carousel" class="blueimp-gallery blueimp-gallery-controls blueimp-gallery-carousel">
+    <div class="slides"></div>
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="play-pause"></a>
+</div>
+<script type="text/javascript">
+blueimp.Gallery([
+    {
+      title: 'Auto Gain Amplifier',
+      href: 'http://ok0rtur47.bkt.clouddn.com/2017-2-20-video001.mp4',
+      type: 'video/mp4',
+      poster: '{{ site.github_cdn_prefix }}/screenshots/2017-2-21 0001.jpg'
+    }],{
+    container: '#blueimp-video-carousel',
+    carousel: true
+  })
+
+</script>

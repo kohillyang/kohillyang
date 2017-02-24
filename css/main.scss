@@ -1,0 +1,24 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+@charset "utf-8";
+// Our variables
+$base-font-family: 'PT Serif', Georgia, Times, 'Times New Roman', serif;
+$base-font-size:   12pt;
+$small-font-size:  $base-font-size * 0.875;
+$base-line-height: 1.5;
+$mono-font-family: 'Source Code Pro', Menlo, Monaco, Inconsolata;
+
+$text-color:       rgb(170,174,183);
+
+$alt-color:        rgb(233,240,233);
+$alt-color-darker: darken($alt-color, 56%);
+$article-bg-color: rgb(50,54,65);
+$background-color: rgb(33,36,43);
+$bg-color-darker:  darken($background-color, 6%);
+$main-border-color: lighten($background-color, 6%);
+$alt-text-color:   rgb(82,177,197);
+$subdued-border:   rgb(81,136,255);
+// Import partials from `sass_dir` (defaults to `_sass`)
+@import "base",  "syntax-highlighting"
+;

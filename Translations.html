@@ -1,0 +1,30 @@
+---
+layout: default
+---
+<div class="container main">
+  <div class="row">
+    <header>
+      <div><center><h1>{{ site.title }}</h1></center></div>
+      <center>
+        <span class="big-ornament">
+          <img src="https://github.com/kohillyang/personal-blog/blob/master/logo.png?raw=true" style="width:12%">
+        </span>
+      </center>
+    </header>
+  </div>
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-8 offset-md-1">
+      {% assign categories = site.categories | sort %}
+      {% for category in categories %}
+     	 {% if category == 'Translation_articles'  %}
+		    <h3>On {{ category | first }}</h3>
+		    <p>{% for posts in category %} {% for post in posts %}
+		            <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>{% if forloop.last == false %},&nbsp;&nbsp;{% endif %}
+					<br>
+	        {% endfor %} {% endfor %}  </p>
+	     {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>

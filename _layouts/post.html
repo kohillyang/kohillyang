@@ -1,0 +1,31 @@
+---
+layout: default
+---
+
+<div class="post">
+  <div class="container main">
+    <div class="row">
+      <header>
+        <center><span itemprop="name"><h2>{{ page.title }}</h2></span></center>
+        <center><p>{{ page.date | date: "%-d %b %Y" }}</p></center>
+        <center><span class="small-ornament">
+			<img src="https://raw.githubusercontent.com/kohillyang/personal-blog/master/logo.png" style="width:8%">
+		</span></center>
+      </header>
+    </div>
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-8 offset-md-1">
+        <article lang="en">
+          {% if page.abstract %} <b>Abstract.</b> {{ page.abstract }}<br><br>{% endif %}
+          {{ content }}
+        </article>
+	     </div>
+     </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#toc').toc();
+});
+</script>

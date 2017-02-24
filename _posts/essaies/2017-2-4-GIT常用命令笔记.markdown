@@ -1,0 +1,90 @@
+---
+layout: post
+title: Git笔记
+date: 2017-02-4 15:46
+comments: true
+external-url:
+categories: 杂文
+---
+<br>
+1. 第一次使用的时候，使用以下命令配置个人信息：<br>
+`git config --global user.name "name"`<br>
+`git config --global user.e-mail "a@a.com"`<br>
+Note:该命令只能使用一次，针对某个文件夹的配置，请进入该文件夹，然后运行没有--global的上述命令。<br>
+使用`git config --global core.editor sublime`来配置文本编辑器。<br>
+PS:这里的编辑器名不能带空格，有双引号也没用，所以要用这个选项的还是自行将编辑器加入环境变量吧。<br>
+PS：默认情况下应该是调用的VIM一类的编辑器吧。<br>
+可以使用git config --list来列出可用的配置项<br>
+
+```bash
+
+$ git config --list
+core.symlinks=false
+core.autocrlf=false
+core.fscache=true
+color.diff=auto
+color.status=auto
+color.branch=auto
+color.interactive=true
+help.format=html
+http.sslcainfo=C:/Program Files/Git/mingw64/ssl/certs/ca-bundle.crt
+diff.astextplain.textconv=astextplain
+rebase.autosquash=true
+credential.helper=manager
+user.email=xxx@xxx.com
+core.repositoryformatversion=0
+core.filemode=false
+core.bare=false
+core.logallrefupdates=true
+core.symlinks=false
+core.ignorecase=true
+remote.origin.url=https://github.com/xxx.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.master.remote=origin
+branch.master.merge=refs/heads/master
+gui.wmstate=normal
+gui.geometry=1205x669+228+228 276 304
+```
+<br>
+2. 如果需要对某个目录进行管理，则需要进入该目录，运行`git init`，该命令创建一个.git目录以及在其中创建必要的文件，使用`git add *.c`之类的命令增加需要追踪的文件.<br>
+3. 克隆一个仓库<br>
+`git clone https://github.com/aa`<br>
+或者<br>
+`git clone https://github.com/aa loacalWareHouseName`<br>
+本地仓库名`loacalWareHouseName`是可选项<br>
+4. GIT的文件有三个状态：已提交（committed）、已修改（modified）和已暂存（staged）任何时候，你都可以使用`git status`检查文件状态。GIT记录的每一个版本事实上都是一份快照，而已提交表示数据已经安全的保存在本地数据库中，已修改表示修改了文件，但还没保存到数据库中。已暂存表示对一个已修改文件的当前版本做了标记，使之包含在下次提交的快照中，注意是对文件的当前版本做一个暂存。总之，对一个文件的操作为：修改(modify)--> 暂存(stage)-->提交(commit)-->push。push是将本地GIT仓库推送到服务器中。添加文件，暂存文件，合并时标记文件为已解决，都是用的命令`git add filename`。<br>
+5. 文件有跟踪和未跟踪两种状态，如果希望文件不出现在未跟踪列表里，可在目录下创建`.gitignore`文件指定，文件名支持正则表达式，注意文件只支持单行注释（以#开头），比如：<br>
+
+```
+*.[oa] 
+# ignore all files ending with '.o' or '.a'.
+*~
+# ignore all files ending with '~'.
+# For example files, see https://github.com/github/gitignore
+```
+<br>
+6. 可以使用`git diff`命令来比较差异，包括文件之间的差异，两次快照之间的差异等。此时有大把图形化工具可以用，这里不对`git diff`命令作介绍。常见的图形化工具有Araxis，emerge，以及大多数Git客户端自带的图形界面。<br>
+7. 在文件暂存之后，使用`git commit`提交，此操作会进入上文中利用`git config --global core.editor sublime`设置的编辑器，在编辑器里输入本次提交的说明，#号开头为注释，git默认会丢掉注释。退出编辑器后，Git会自动生成一次提交。<br>
+8. 如果需要跳过暂存步骤（`git add filename`），自动将所有更改的文件自动暂存提交，可使用`git commit -a`。<br>
+9. 如果不小心把log文件等不想提交的文件暂存到了暂存区，可使用`git rm cached filename`删除。filename支持正则匹配，注意执行此命令之后该文件会自动被移出跟踪文件列表。<br>
+10. 使用`git log`可查看提交历史，事实上这个在图形界面里更直观。<br>
+11. 撤销操作
+<div class="alert alert-warning"><strong>警告！</strong>部分撤销操作是不可逆的，请谨慎操作!</div>
+　　如果在提交完成后发现提交信息有误，或者有的文件没有被提交，则把缺少的文件添加到缓存区之后重新提交。<br>
+`git commit #之前的一次提交`<br>
+`git add fileforgot #添加你忘掉的文件`<br>
+`git commit --amend  #重新生成一次提交`<br>
+　　如果您希望把暂存到暂存区的某个文件移除，则使用`git reset HEAD filename`恢复。<br>
+12. 远程仓库。可以使用`git remote -v`获得详细的远程仓库信息。<br>
+　　`git fetch`是从远程仓库中拉取本地仓库没有的信息，它不会尝试合并操作，需要您稍后手动合并。<br>
+　　`git pull`是从远程仓库中拉取信息并尝试与本地合并，需要您稍后解决冲突（如果有的话）。<br>
+13. Git分支。可以使用'git checkout [commit-ref] -- [filename]'尝试还原某个文件。比如：
+<img class="img-responssive" style="width: 100%" src="{{ site.cdn_prefix }}/screenshots/2017-2-7 0003.jpg"><br>
+可见有两次提交，第二次更改了文件，如果需要把readme.html还原为第二次提交前的状态，则：<br>
+`git checkout 7506f2110ff627b048b04dc79996e9b7c3ee3563 -- readme.html
+`<br>
+如果需要把项目还原到某个提交，则需要现在该次提交上创建分支，随后切换到该分支，随后到原来的分支上合并新建的分支。<br>
+未完待续
+
+
+

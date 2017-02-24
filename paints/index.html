@@ -1,0 +1,62 @@
+---
+layout: default
+---
+<link rel="stylesheet" href="http://qcloud.kohill.cn/galleries/css/blueimp-gallery.css">
+<link rel="stylesheet" href="http://qcloud.kohill.cn/galleries/css/blueimp-gallery-indicator.css">
+<link rel="stylesheet" href="http://qcloud.kohill.cn/galleries/css/blueimp-gallery-video.css">
+
+<div class="container main">
+<center>
+<span class="big-ornament">
+  <img src="https://github.com/kohillyang/personal-blog/blob/master/logo.png?raw=true" style="width:10%">
+</span>
+</center>
+<h2>Carousel video gallery</h2>
+<!-- The Gallery as inline carousel, can be positioned anywhere on the page -->
+<div id="blueimp-image-carousel" class="blueimp-gallery blueimp-gallery-carousel">
+    <div class="slides"></div>
+    <h3 class="title"></h3>
+    <a class="prev"></a>
+    <a class="next"></a>
+    <a class="play-pause"></a>
+</div>
+<script src="http://qcloud.kohill.cn/galleries/js/blueimp-helper.js"></script>
+<script src="http://qcloud.kohill.cn/galleries/js/blueimp-gallery.js"></script>
+<script src="http://qcloud.kohill.cn/galleries/js/blueimp-gallery-indicator.js"></script>
+<script src="http://qcloud.kohill.cn/galleries/js/blueimp-gallery-youtube.js"></script>
+<script src="http://qcloud.kohill.cn/galleries/js/vendor/jquery.js"></script>
+<script src="http://qcloud.kohill.cn/galleries/js/jquery.blueimp-gallery.js"></script>
+<script type="text/javascript">
+    var carouselLinks = []
+
+          carouselLinks.push({
+            href: 'https://raw.githubusercontent.com/kohillyang/personal-blog/master/paints/2017-2-3-A.png',
+            title: '2017-2-3-A.png'
+          })     
+
+          carouselLinks.push({
+            href: 'https://raw.githubusercontent.com/kohillyang/personal-blog/master/paints/2017-2-4-A.png',
+            title: '2017-2-4-A.png'
+          })     
+
+          carouselLinks.push({
+            href: 'https://raw.githubusercontent.com/kohillyang/personal-blog/master/paints/2017-2-5-A.png',
+            title: '2017-2-5-A.png'
+          })     
+
+          carouselLinks.push({
+            href: 'https://raw.githubusercontent.com/kohillyang/personal-blog/master/paints/2017-2-7-A.png',
+            title: '2017-2-7-A.png'
+          })     
+
+          carouselLinks.push({
+            href: 'https://raw.githubusercontent.com/kohillyang/personal-blog/master/paints/2017-2-8-A.png',
+            title: '2017-2-8-A.png'
+          })     
+
+    blueimp.Gallery(carouselLinks, {
+      container: '#blueimp-image-carousel',
+      carousel: true
+    })
+</script>
+</div>

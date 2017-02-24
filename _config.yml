@@ -1,1 +1,16 @@
-theme: jekyll-theme-cayman
+# Site settings
+title: ""
+author: "kohill"
+description: "This is a simple blog hosted on Github by Kohill. If you want to get in touch with me, just send a mail to kohillyang@126.com."
+keywords: ""
+biography: "I'm just a college student studying Automation and loving z-turn."
+colophon: ""
+baseurl: ""
+url: "http://blog.kohill.cn"
+github_username: kohillyang
+simple_search: http://google.com/search
+markdown: kramdown
+cdn_prefix: http://ok0rtur47.bkt.clouddn.com
+github_cdn_prefix: https://cdn.rawgit.com/kohillyang/personal-blog/master/assets
+encoding: utf-8
+permalink: /:year-:month-:day/:title.html

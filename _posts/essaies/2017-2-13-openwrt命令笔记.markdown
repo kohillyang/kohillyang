@@ -87,12 +87,16 @@ config rule 'transmission_peer_tcp'
         option target 'ACCEPT'
         option name 'transmission_web_ipv4'
 
-##允许某个端口的访问请求
-
-iptables -I INPUT -p tcp --dport PORT_NUMBER -j ACCEPT
 ```
 
-### Example：利用iptables记录日志：(未成功)
+### 允许某个端口的访问请求(测试成功)
+
+运行在路由器上的程序已经监听了某个端口但是外网依旧无法访问时，可以尝试下面的命令：
+
+`iptables -I INPUT -p tcp --dport PORT_NUMBER -j ACCEPT`
+
+
+### Example：利用iptables记录日志(未成功)
 
 ```
 iptables -A INPUT -i wan+ -p tcp --dport 51413 -j LOG --log-prefix "iptables_51413_tcp_alert" --log-level debug
@@ -175,7 +179,7 @@ config tinyproxy
         list ConnectPort 563
 ```
 
-### 利用ip6tables 设置NAT6
+### 利用ip6tables 设置NAT6(已测试)
 
 ```bash
 LAN_ULA_PREFIX=$(uci get network.globals.ula_prefix)

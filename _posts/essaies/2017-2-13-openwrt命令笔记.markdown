@@ -89,12 +89,13 @@ config rule 'transmission_peer_tcp'
 
 ```
 
-### 允许某个端口的访问请求(测试成功)
+### 允许IPV6&IPV4某个端口的访问请求(测试成功)
 
 运行在路由器上的程序已经监听了某个端口但是外网依旧无法访问时，可以尝试下面的命令：
 
 `iptables -I INPUT -p tcp --dport PORT_NUMBER -j ACCEPT`
-
+同样对于IPV6，命令如下
+`ip6tables -I INPUT -p tcp --dport PORT_NUMBER -j ACCEPT`
 
 ### Example：利用iptables记录日志(未成功)
 
@@ -143,7 +144,7 @@ iptables -t nat -D POSTROUTING -p tcp -m tcp -s $dest_addr_lan --sport     $dest
 ### 删除LUCI缓存（已测试）
 rm /tmp/luci-indexcache
 
-### 安装支持IPv6的http代理
+### 安装支持IPv6的http代理(已测试)
 
 ```bash
 opkg update
@@ -188,3 +189,6 @@ WAN6_GATEWAY=$(route -A inet6 -e | grep "pppoe-wan" | awk '/::\/0/{print $2; exi
 ip6tables -t nat -I POSTROUTING -s "$LAN_ULA_PREFIX" -o "$WAN6_INTERFACE" -j MASQUERADE
 route -A inet6 add 2000::/3 gw "$WAN6_GATEWAY" dev "$WAN6_INTERFACE"
 ```
+
+### 同时支持IPV4与IPV6端口扫描的网站(已测试)
+<http://www.ipv6scanner.com>

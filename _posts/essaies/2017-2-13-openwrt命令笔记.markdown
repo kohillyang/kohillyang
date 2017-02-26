@@ -192,3 +192,9 @@ route -A inet6 add 2000::/3 gw "$WAN6_GATEWAY" dev "$WAN6_INTERFACE"
 
 ### 同时支持IPV4与IPV6端口扫描的网站(已测试)
 <http://www.ipv6scanner.com>
+
+### 配置多拨
+opkg install kmod-macvlan
+ip link add link eth0.2 vth1 type macvlan
+ifconfig vth1 hw ether 00:11:22:33:44:55
+ifconfig vth1 up

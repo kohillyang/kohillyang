@@ -181,6 +181,7 @@ config tinyproxy
 ```
 
 ### 利用ip6tables 设置NAT6(已测试)
+注意ula_prefix不能以f开头
 
 ```bash
 LAN_ULA_PREFIX=$(uci get network.globals.ula_prefix)
@@ -193,8 +194,24 @@ route -A inet6 add 2000::/3 gw "$WAN6_GATEWAY" dev "$WAN6_INTERFACE"
 ### 同时支持IPV4与IPV6端口扫描的网站(已测试)
 <http://www.ipv6scanner.com>
 
-### 配置多拨
+### 配置多拨(未成功)
 opkg install kmod-macvlan
-ip link add link eth0.2 vth1 type macvlan
+ip link add link eth1 name eth1.0 type vlan id 20
+ifconfig eth1.0 hw ether 00:11:22:33:44:53
+ifconfig eth1.0  up
+ip link add link eth1.0 vth1 type macvlan
+ip link add link eth1.0 vth2 type macvlan
 ifconfig vth1 hw ether 00:11:22:33:44:55
+ifconfig vth2 hw ether 00:11:22:33:44:54
+ifconfig vth2 up
 ifconfig vth1 up
+
+ip link add link eth1 vth1 type macvlan
+ifconfig vth1 up
+ifconfig vth1 hw ether 00:11:22:33:44:55
+
+ip link add link eth1 vth2 type macvlan
+ifconfig vth2 up
+ifconfig vth2 hw ether 00:11:22:33:44:54
+
+/usr/sbin/pppd nodetach ipparam wan ifname pppoe-wan2 +ipv6 set AUTOIPV6=1 nodefaultroute usepeerdns maxfail 1 user yangkeshan password 1312366 ip-up-script /lib/netifd/ppp-up ipv6-up-script /lib/netifd/ppp-up ip-down-script /lib/netifd/ppp-down ipv6-down-script /lib/netifd/ppp-down mtu 1492 mru 1492 plugin rp-pppoe.so nic-macvlan0

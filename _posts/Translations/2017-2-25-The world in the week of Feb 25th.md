@@ -29,8 +29,12 @@ categories: Translation_articles
 
 ### Tightening the border
 
-<p>America’s Department of Homeland Security published guidelines to implement Donald Trump’s executive order cracking down on illegal immigrants. Among other things, the new rules make it much easier to deport people who cannot prove they have been living in the United States for two years. See article.</p>
+<p>America’s Department of Homeland Security published guidelines to implement Donald Trump’s executive order cracking down on illegal immigrants. Among other things, the new rules make it much easier to deport people who cannot prove they have been living in the United States for two years.</p>
+<p>美国国土安全局近日发表了实施特朗普的针对非法移民的行政命令的参考指导方针。除此之外，新规定让遣返不能证明自己在美国居住超过两年的人更加容易。</p>
+
 <p>Mike Pence went to Europe to assure America’s allies that it is still committed to NATO, whatever his boss may have said. But the vice-president also called on Europeans to boost defence spending to honour their commitment to the military alliance.</p>
+
+<p>Mike Pence去了欧洲以保证美国的同盟国无论它们的领导人说了什么，它们都会效忠于北大西洋公约组织。但是</p>
 
 <img src="{{ site.github_cdn_prefix }}/translations/20170225_wwp002.jpg" class="img-ressponssive" style="width: 90%;margin-left: 3%">
 

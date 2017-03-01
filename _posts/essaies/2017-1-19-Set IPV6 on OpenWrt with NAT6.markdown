@@ -7,13 +7,6 @@ external-url:
 categories: Projects
 ---
 <br>
-<div id="dw__toc" style="width:300px;float:right;margin-left:10px">
-    <h3 class="toggle open" style="cursor: pointer;"><strong><span>−</span></strong>Table of Contents</h3>
-    <div aria-expanded="true" style="display: block;">
-        <div id="toc"></div>
-    </div>
-</div>
-
 ## Set IPv6
 　　把下面的代码放入任意目录，比如存入`/tmp/nat_set.sh`，并执行`chmod +x /tmp/nat_set.sh`以给文件加上可执行权限，最后`./tmp/nat_set.sh`以执行该脚本。<br><br>
 

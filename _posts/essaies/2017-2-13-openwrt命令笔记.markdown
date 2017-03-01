@@ -7,12 +7,6 @@ external-url:
 categories: 杂文
 ---
 <br>
-<div id="dw__toc" style="width:300px;float:right;margin-left:10px">
-    <h3 class="toggle open" style="cursor: pointer;"><strong><span>−</span></strong>Table of Contents</h3>
-    <div aria-expanded="true" style="display: block;">
-        <div id="toc"></div>
-    </div>
-</div>
 
 　　本文只是笔记，所述内容仅供参考，大部分未经测试。
 
@@ -194,24 +188,10 @@ route -A inet6 add 2000::/3 gw "$WAN6_GATEWAY" dev "$WAN6_INTERFACE"
 ### 同时支持IPV4与IPV6端口扫描的网站(已测试)
 <http://www.ipv6scanner.com>
 
-### 配置多拨(未成功)
-opkg install kmod-macvlan
-ip link add link eth1 name eth1.0 type vlan id 20
-ifconfig eth1.0 hw ether 00:11:22:33:44:53
-ifconfig eth1.0  up
-ip link add link eth1.0 vth1 type macvlan
-ip link add link eth1.0 vth2 type macvlan
-ifconfig vth1 hw ether 00:11:22:33:44:55
-ifconfig vth2 hw ether 00:11:22:33:44:54
-ifconfig vth2 up
-ifconfig vth1 up
+### 配置多拨(已测试)
+执行`opkg update && opkg install kmod-macvlan`之后，执行`ip link add link eth1 type macvlan`，这会生成一个名字为macvlan0,mac随机的虚拟网卡，以此为物理网卡在interface下新建一个pppoe连接，记下你的接口名(pppoe-wan开头，比如pppoe-wan2)，执行下面的代码手动拨号（不是百分百成功，隔一段时间试几次），注意替换pppoe-wan2，$usrname，$passwd。
 
-ip link add link eth1 vth1 type macvlan
-ifconfig vth1 up
-ifconfig vth1 hw ether 00:11:22:33:44:55
-
-ip link add link eth1 vth2 type macvlan
-ifconfig vth2 up
-ifconfig vth2 hw ether 00:11:22:33:44:54
-
-/usr/sbin/pppd nodetach ipparam wan ifname pppoe-wan2 +ipv6 set AUTOIPV6=1 nodefaultroute usepeerdns maxfail 1 user yangkeshan password 1312366 ip-up-script /lib/netifd/ppp-up ipv6-up-script /lib/netifd/ppp-up ip-down-script /lib/netifd/ppp-down ipv6-down-script /lib/netifd/ppp-down mtu 1492 mru 1492 plugin rp-pppoe.so nic-macvlan0
+```bash
+/usr/sbin/pppd nodetach ipparam wan ifname pppoe-wan2 +ipv6 set AUTOIPV6=1 nodefaultroute usepeerdns maxfail 1 user $usrname password $passwd ip-up-script /lib/netifd/ppp-up ipv6-up-script /lib/netifd/ppp-up ip-down-script /lib/netifd/ppp-down ipv6-down-script /lib/netifd/ppp-down mtu 1492 mru 1492 plugin rp-pppoe.so nic-macvlan0
+```
+<img src="{{ site.github_cdn_prefix }}/screenshots/2017-3-1 0000.jpg" class="img-responssive">

@@ -1,0 +1,21 @@
+---
+layout: post
+title: jekyll笔记
+date: 2017-2-9 3:15
+comments: true
+external-url:
+categories: 杂文
+---
+<br>
+### Latex语法翻译
+
+<http://mlworks.cn/posts/introduction-to-mathjax-and-latex-expression/>
+
+### kramdown语法
+<https://kramdown.gettalong.org/installation.html>
+
+### 网站的视频&相册插件
+[blueimp Gallery](https://github.com/blueimp/Gallery)
+
+### [在博客中加入目录]
+<https://github.com/ghiculescu/jekyll-table-of-contents>

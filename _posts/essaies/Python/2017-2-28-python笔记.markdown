@@ -1,0 +1,42 @@
+---
+layout: post
+title: python笔记
+date: 2017-2-28 19:40
+comments: true
+external-url:
+categories: 杂文
+---
+<br>
+
+### 下载安装mysql
+`https://cdn.mysql.com//Downloads/MySQLInstaller/mysql-installer-community-5.7.17.0.msi`
+
+### Anaconda更改python版本
+```bash
+conda create -n py34 python=3.4
+activate py34
+conda install -n py34 lxml
+```
+
+### python json
+在处理json数据的时候，可能会遇到 Invalid \\escape之类的错误，可尝试用下面的代码解决。
+
+```python
+replacedQuoteJson = re.sub(r"\\x26([a-zA-Z]{2,6});", r"&\1;", afterRemoveLastCommaInList);
+logging.info("replacedQuoteJson=%s", replacedQuoteJson);
+
+photoInfoDict = json.loads(replacedQuoteJson);
+logging.info("photoInfoDict=%s", photoInfoDict);
+```
+比如json中出现了`\x26XXX`会被替换成`&XXX;`
+
+### pymysql
+
+1. 正确的连接方式`db=pymysql.connect(host='localhost',user='root',passwd='123456',db='qq_profile_filter',port=3306,charset='utf8')`
+
+### 迭代器索引
+
+```python
+for i, season in enumerate([’Spring’, ’Summer’, ’Fall’, ’Winter’]):
+    print i
+```

@@ -205,31 +205,13 @@ sup > .footnote {
   font-style: normal;
 }
 
-table {
-  margin: 0 auto;
-  margin-top: 1.25em;
-  margin-bottom: 1.25em;
-  border-spacing: 2em 0.1em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  border-collapse: separate;
-  background-color: $background-color;
-  border-left: 2.5pt solid $alt-color;
-
-  td, th {
-    display: table-cell;
-    vertical-align: inherit;
-    border: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  th {
-    padding-bottom: 0.6em;
-    // border-bottom: 2px solid $alt-color;
-  }
-
-}
 .navbar .nav > li >a{
     color:rgb(200,200,200);
+}
+table {
+  border: 1;
+  td, th {
+    border: 1;
+  }
+
 }

@@ -1,0 +1,35 @@
+---
+layout: default
+date: 2017-02-14 19:40
+permalink: /machine_learning
+---
+<div class="container main">
+  <div class="row">
+    <header>
+      <div><center><h1>{{ site.title }}</h1></center></div>
+      <center>
+        <span class="big-ornament">
+          <img src="https://github.com/kohillyang/personal-blog/blob/master/logo.png?raw=true" style="width:10%">
+        </span>
+      </center>
+    </header>
+  </div>
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-8 offset-md-1">
+		  {% assign categories = site.categories | sort %}
+		  {% for category in categories %}
+			 {% if category.first == 'machineLearning'  %}
+				<h3>On {{ category | first }}</h3>
+
+		{% for posts in category %} 
+			{% for post in posts %}
+			<a href="{{ post.url | prepend: site.baseurl }}">{{post.title}}</a>
+      <br>
+			{% if forloop.last == false %}{% endif %}
+				{% endfor %} {% endfor %} 
+			{% endif %}
+		{% endfor %}
+    </div>
+  </div>
+</div>

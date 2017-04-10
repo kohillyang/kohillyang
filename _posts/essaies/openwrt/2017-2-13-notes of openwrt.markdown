@@ -15,7 +15,7 @@ permalink: /notes_openwrt
 　　[访问https://dev.openwrt.org/wiki/GetSource](https://dev.openwrt.org/wiki/GetSource)。
 
 ```bash
-sudo apt-get install gawk  libssh-dev  gcc g++ binutils patch bzip2 flex bison make autoconf gettext texinfo unzip sharutils subversion libncurses5-dev ncurses-term zlib1g-dev libperl-dev file libp11-kit-dev libudns-dev
+sudo apt-get install gawk  libssh-dev  gcc g++ binutils patch bzip2 flex bison make autoconf gettext texinfo unzip sharutils subversion libncurses5-dev ncurses-term zlib1g-dev libperl-dev file libp11-kit-dev
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 ```
@@ -626,32 +626,45 @@ iptables -t nat -I POSTROUTING -s 192.168.0.1/24 -o eth0 -j MASQUERADE
 
 ### dynv6更新脚本（已测试）
 
+'''bash
+crontab -e
+*/1 * * * * /root/dynv6/update.sh
+'''
+
+
 ```bash
-
-#!/bin/sh /etc/rc.common
-
-START=59
+#!/bin/sh
 # send addresses to dynv6
-boot(){
-    start &
-}
-start(){
-        while true
-        do
-                ipv4_addr=`curl -4 -s icanhazip.com`
-                ipv6_addr=`curl -6 -s icanhazip.com`
-                echo $ipv4_addr
-                echo $ipv6_addr
-                hostname=router-kohill-001.dynv6.net
-                token=dThXzxHgmDYxjyaYC9KBLXuiHLjAq-
-                wget -6 -O- "http://dynv6.com/api/update?hostname=$hostname&ipv6=$ipv6_addr&token=$token"
-                wget -O- "http://ipv4.dynv6.com/api/update?hostname=$hostname&ipv4=$ipv4_addr&token=$token"
-                sleep 60
-        done
-}
+ipv4_addr=`curl -4 -s icanhazip.com`
+ipv6_addr=`curl -6 -s icanhazip.com`
+echo $ipv4_addr
+echo $ipv6_addr
+hostname=router-kohill-001.dynv6.net
+token=dThXzxHgmDYxjyaYC9KBLXuiHLjAq-
+wget -6 -O- "http://dynv6.com/api/update?hostname=$hostname&ipv6=$ipv6_addr&token=$token"
+wget -O- "http://ipv4.dynv6.com/api/update?hostname=$hostname&ipv4=$ipv4_addr&token=$token"
 
 ```
 
 
 ### Atheros网卡开启13信道（失败）
 <http://luci.subsignal.org/~jow/reghack/README.txt>
+
+
+### 安装带EFI支持的grub2
+<https://www.douban.com/note/210077866/?type=like>
+<http://bbs.wuyou.net/forum.php?mod=viewthread&tid=310626>
+
+### 查看 UUID
+sudo blkid
+
+## xserver相关
+1. Xserver https://sourceforge.net/projects/vcxsrv/
+2. 在运行软件前，需要执行：
+DISPLAY=192.168.1.166:0.0 startx &
+export DISPLAY=:0
+```bash
+sudo apt-get -u install x-window-system-core
+sudo apt-get -u install gdm gdm-themes
+sudo apt-get -u install kde-core kde-i18n-zhcn
+```

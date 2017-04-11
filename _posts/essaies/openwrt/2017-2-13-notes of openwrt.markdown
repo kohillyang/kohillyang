@@ -1,6 +1,6 @@
 ---
 layout: post
-title: notes of openwrt
+title: Notes of openwrt
 date: 2017-02-13 19:40
 comments: true
 external-url:
@@ -640,7 +640,7 @@ ipv6_addr=`curl -6 -s icanhazip.com`
 echo $ipv4_addr
 echo $ipv6_addr
 hostname=router-kohill-001.dynv6.net
-token=dThXzxHgmDYxjyaYC9KBLXuiHLjAq-
+token=dThXzxHgmDYxjyaYC9KALXuiHLjAq-
 wget -6 -O- "http://dynv6.com/api/update?hostname=$hostname&ipv6=$ipv6_addr&token=$token"
 wget -O- "http://ipv4.dynv6.com/api/update?hostname=$hostname&ipv4=$ipv4_addr&token=$token"
 
@@ -660,11 +660,19 @@ sudo blkid
 
 ## xserver相关
 1. Xserver https://sourceforge.net/projects/vcxsrv/
-2. 在运行软件前，需要执行：
-DISPLAY=192.168.1.166:0.0 startx &
-export DISPLAY=:0
+
 ```bash
+DISPLAY=192.168.1.166:0.0 startx &
+DISPLAY=:0 gedit
 sudo apt-get -u install x-window-system-core
 sudo apt-get -u install gdm gdm-themes
 sudo apt-get -u install kde-core kde-i18n-zhcn
+```
+
+### 以文件作为交换分区
+
+```bash
+dd if=/dev/zero of=~/swapfile bs=1024 count=512k
+mkswap ~/swapfile 
+sudo swapon /swapfile 
 ```

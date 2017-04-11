@@ -1,6 +1,6 @@
 ---
 layout: post
-title: add https support for web server
+title: Add https support for web server
 date: 2017-02-14 19:40
 comments: true
 external-url:
@@ -195,5 +195,15 @@ server {
     location / {
         try_files $uri $uri/ =404;
     }
+}
+```
+
+### nginx设置网址重定向
+
+```json
+server{
+	location / {
+		rewrite ^/ http://notes.kohill.cn;
+	}
 }
 ```

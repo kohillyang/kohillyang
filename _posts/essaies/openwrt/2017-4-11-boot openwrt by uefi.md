@@ -12,11 +12,12 @@ categories: OpenWrt
 1. <http://unix.stackexchange.com/questions/52996/how-to-boot-efi-kernel-using-qemu-kvm>
 2. <https://github.com/tianocore/tianocore.github.io/wiki/How-to-run-OVMF>
 
-其中[2]是QEMU的UEFI固件
+其中[2]是QEMU的UEFI固件，注意32位的UEFI固件启动的是/EFI/Boot/bootia32.efi,64位UEFI固件启动的是/EFI/Boot/bootx64.efi，用该BIOS固件启动KVM的命令如下：
 
 ```bash
-sudo kvm  --bios  ./OVMF.fd /dev/sdb --net none -serial stdio
+sudo kvm  --bios  ./OVMF.fd /dev/sdb -net nic,model=ne2k_pci -net user -soundhw es1370 -serial stdio
 ```
+[OVME点我下载]({{ site.github_cdn_prefix }}/OVMF-X64-r15214.zip)
 
 ### How to boot Openwrt using uefi?
 
@@ -24,17 +25,17 @@ sudo kvm  --bios  ./OVMF.fd /dev/sdb --net none -serial stdio
 1. <https://www.douban.com/note/210077866/?type=like>
 2. <http://bbs.wuyou.net/forum.php?mod=viewthread&tid=310626>
 3. <http://bbs.wuyou.net/forum.php?mod=viewthread&tid=339411&extra=page%3D1>
-这里就不说了
 
-基础知识：
-1. uefi启动分区只能是fat,fat32，linux下新建的默认为fat，即fat16，因此uefi的启动文件必须放在fat分区。
-2. openwrt为linux内核，一般使用linux引导，因此启动顺序为：uefi-grub2-linux内核。
-3. linux内核即boot分区下的/boot/vmlinuz，或者编译出来的xxx-linuz，这是一个压缩的内核,在启动的过程中会有一个自解压的过程。
-4. 内核启动过程中，会提供一个/挂载点，随后可以挂载你自己的root到/挂载点。我们常用的chroot就是切换挂载点/的过程。
+### 启动盘制作命令：
 
-openwrt分区
-根据编译出来的img文件，默认会有两个ext4（也可能是其他格式的）分区，第一个分区为boot分区，默认不是fat格式，我们需要把它里面的文件提取出来，然后把第一个分区格式化为fat格式，然后把复制出来的文件再复制回去。
-第二个分区即rootfs，这个分区的位置在grub.cfg中由UUID指定
+从<http://alpha.gnu.org/gnu/grub/grub-2.02~rc1-for-windows.zip>下载grub2并解压，切换到解压后的目录，执行以下命令
+
+```bash
+grub-mkimage.exe -d i386-efi  -p /EFI/Boot/ -o bootia32.efi -O  i386-efi part_gpt part_msdos disk fat exfat ext2 ntfs appleldr hfs iso9660 normal search_fs_file 
+```
+-p 是指定grub的前缀，相当于指定配置文件的目录，启动如果没有找到这个目录，那么会进入grub2命令行。ls命令可以查看分区啥的。
+
+命令会在当前目录下生成bootia32.efi文件，改名后复制到/EFI/Boot/下就行了。32位的UEFI固件启动的是/EFI/Boot/bootia32.efi,64位UEFI固件启动的是/EFI/Boot/bootx64.efi。然后可在/EFI/Boot/下新建一个Grub.cfg，里面可以创建菜单，加载字体，替换背景之类。
 
 ```bash
 set pager=1
@@ -89,3 +90,5 @@ menuentry "关机"{
 halt
 }
 ```
+
+

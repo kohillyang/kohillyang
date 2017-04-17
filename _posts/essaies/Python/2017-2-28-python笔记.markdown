@@ -4,7 +4,7 @@ title: python笔记
 date: 2017-2-28 19:40
 comments: true
 external-url:
-categories: 杂文
+categories: python
 ---
 <br>
 
@@ -40,3 +40,352 @@ logging.info("photoInfoDict=%s", photoInfoDict);
 for i, season in enumerate([’Spring’, ’Summer’, ’Fall’, ’Winter’]):
     print i
 ```
+### 获取行数
+
+```python
+def get_head_info():
+     try:
+         raise Exception
+     except:
+         f = sys.exc_info()[2].tb_frame.f_back
+     return '%s, %s, %s, %s, ' % (str(datetime.now()), f.f_code.co_filename, f.f_code.co_name, str(f.f_lineno))
+```
+
+### scipy.sparse 稀松矩阵
+经常的一种写法是：
+
+```python
+from scipy.sparse import coo_matrix, vstack
+A = coo_matrix([[1, 2], [3, 4]])
+B = coo_matrix([[5, 6]])
+vstack([A, B]).toarray()
+```
+
+输出：
+```python
+array([[1, 2],
+       [3, 4],
+       [5, 6]])
+```
+
+<div class="alert alert-warning">注意vstack的第一参数是一个列表，已经踩了很多次坑了！</div>
+
+### pymysql-cursor
+之前习惯这样写：
+
+```python
+with cursor = pymysql.connect(...):
+    a = cursor.fetchall()
+    for l in a:
+        do something...
+```
+cursor如果没有数据了，使用fetchone返回的是None
+
+但是事实上cursor本身实现了一个迭代器，因此可以这样写
+
+```python
+with cursor = pymysql.connect(...):
+    for row in cursor:
+        do something...
+```
+
+### python-list
+注意[].append(x)返回的返回None（为什么返回None），之前我以为是返回对象本身，结果踩坑。
+
+### 连续迭代多个对象：
+
+```python
+from itertools import chain  
+>>> a = [1, 2, 3, 4]  
+>>> b = ['a', 'b', 'c']  
+>>> for x in chain(a, b):  
+...     print(x) 
+```
+### python 读取不同编码格式的文本
+1. 读取无BOM的UTF-8编码文件，open方法传入参数：encoding = 'utf-8'
+2. 读取有BOM的UTF-8编码文件，open方法传入参数：encoding = 'utf-8-sig'
+3. 读取无BOM的gbk编码文件，open方法传入参数：encoding = 'gbk'
+
+
+### python 多进程共享数据
+由于进程的地址空间是独立的，因此直接利用共享内存实现数据共享不太现实，但是python 的multiprocessing模块提供了一种代理方式访问对象的方法。
+
+```python
+import time
+import multiprocessing
+ 
+def worker(d, key, value):
+    d[key] = value
+ 
+if __name__ == '__main__':
+    print time.strftime('%y-%m-%d %H:%M:%S' ,   time.localtime())
+    mgr = multiprocessing.Manager()
+    d = mgr.dict()
+    jobs = [ multiprocessing.Process(target=worker, args=(d, i, i*2))
+             for i in range(10)
+             ]
+    for j in jobs:
+        j.start()
+    for j in jobs:
+        j.join()
+    print ('Results:' )
+    for key in dict(d):
+      print "%s->%s" % (key,d[key])
+```
+
+### scipy.sparse.dok_matrix
+
+关于这个dok_matrix，一般的写法是这样：
+
+```
+import numpy as np
+from scipy.sparse import dok_matrix
+S = dok_matrix((5, 5), dtype=np.float32)
+for i in range(5):
+    for j in range(5):
+        S[i, j] = i + j    # Update element
+```
+这时候S初始化为一个shape=(5,5)的矩阵，但是这样写就不行了：
+
+```python
+S = dok_matrix(shape = (5, 5), dtype=np.float32)
+```
+会提示少一个参数。
+
+dok_matrix的一般用途是在创建矩阵的时候依次添加非零元，在创建完毕之后再转为其他类型的矩阵，例如csr_maxtrix
+
+详细文档见<https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.dok_matrix.html>
+
+
+### 关于python的全局语句
+不知道叫什么名字，反正写在函数以及class外的语句，在每次切到本文件时都会被执行一次，或者说，python并没有防止语句执行多次的机制（个人认为是个坑）。
+
+### 关于Pydev不显示Outline以及代码提示有异常
+
+请先解决语法错误
+
+
+### Python多进程
+个人认为最好用的还是multiprocessing的map了，返回一个迭代器对象，之后只要从迭代器中读取数据就行了。
+
+```python
+#coding: utf-8
+import multiprocessing 
+
+def func(x): 
+    print x * x 
+
+if __name__ == '__main__': 
+    pool = multiprocessing.Pool(4) 
+    i_list = range(8)
+    pool.map(func, i_list)
+```
+
+
+### Sqlite3存取二进制对象
+
+几点注意的：
+1. 在所有数据添加完毕之后再commit速度会快很多
+2. 可以用？代替bytes，例如
+
+```python
+self.db.execute("insert into xxx values(?,?)", (keyhash,item_bytes))
+```
+
+```python
+#coding=utf-8
+'''
+Created on 2017年4月17日
+
+@author: kohillyang
+'''
+import sys
+import traceback
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.Qt import QApplication, QWidget, QLabel,QVBoxLayout,QProgressBar
+from PyQt5.Qt import Qt
+from pickle import dumps,loads
+import queue,os
+from threading import Thread
+import pickle
+import sqlite3
+class ProgressBar(object):
+    class InternalQProgressar(QWidget):
+        valueChanged = pyqtSignal(int)
+        textChanged = pyqtSignal(str)
+        def __init__(self,messageQueue,title,total):
+            QWidget.__init__(self)
+            self.messageQueue = messageQueue
+            self.setFixedSize(640,120)
+            self.setWindowTitle(title)
+            self.setLayout(QVBoxLayout())
+            self.setWindowFlags(Qt.WindowStaysOnTopHint)
+            self.progressBarWidget = QProgressBar(self)
+            self.progressBarWidget.setMaximum(total)
+            self.progressBarWidget.setValue(0)
+            self.layout().addWidget(self.progressBarWidget)
+            self.label = QLabel(self)
+            self.layout().addWidget(self.label)
+            self.valueChanged.connect(self.progressBarWidget.setValue)
+            self.textChanged.connect(self.label.setText)
+            Thread(target=self.run,daemon=True).start()
+            self.total = total
+            self.show()
+
+        def run(self):
+            import time
+            while True:
+                try:
+                    a = self.messageQueue.get(False)
+                    self.valueChanged.emit(int(a))
+                    self.textChanged.emit("%d/%d"%(int(a),self.total))
+                except queue.Empty:
+                    time.sleep(0.1)
+    def internal_createProgressBar(self,messageQueue,title,total):
+        app = QApplication(sys.argv)
+        self.InternalQProgressar(messageQueue,title,total)
+        return app.exec()
+    def __init__(self,title = "正在处理",total = 100):
+        from multiprocessing import Process, Queue
+        self.messageQueue = Queue(8)
+        self.v = 0
+        self.p = Process(target=self.internal_createProgressBar,args=(self.messageQueue,title,total))
+        self.p.daemon = True
+        self.p.start()
+    def refresh(self,value,s = ""):
+        self.v = value
+        try:
+            self.messageQueue.put_nowait(value)
+        except queue.Full:
+            pass
+    def addOne(self,s = ""):
+        self.v += 1
+        try:
+            self.messageQueue.put_nowait(self.v)        
+        except queue.Full:
+            pass
+    def end(self):
+        self.p.terminate()
+
+class disk_dic(object):
+    def __init__(self, filename):
+        self.dbfilename = filename + ".db"
+        if os.path.exists(filename):
+            os.remove(filename)
+        if os.path.exists(self.dbfilename):
+            os.remove(self.dbfilename)
+        self.db = sqlite3.connect(self.dbfilename)        
+        self.db.execute('''CREATE TABLE XXX
+       (HASH INT PRIMARY KEY     NOT NULL,
+       da           b    NOT NULL 
+       );''')            
+    def openforappend(self):
+        self.db = sqlite3.connect(self.dbfilename)
+        self.cursor = self.db.cursor()         
+    def close(self):
+        self.db.commit()
+        self.db.close()
+    def openforread(self):
+        self.db = sqlite3.connect(self.dbfilename)    
+        self.cursor = self.db.cursor()       
+    def __getitem__(self,key):
+        self.cursor.execute("SELECT * FROM xxx WHERE HASH=%d"%(hash(key),)) 
+        da = self.cursor.fetchone()[1]       
+        return loads(da)
+    def append(self,key,item):
+        keyhash = hash(key)
+        item_bytes = dumps(item)
+        self.db.execute("insert into xxx values(?,?)", (keyhash,item_bytes))
+    def keys(self):
+        cursor = self.db.cursor()
+        cursor.execute("SELECT * FROM XXX");
+        return map(lambda x: int(x[0]),cursor)
+if __name__=="__main__":
+    test = disk_dic("./tmp/testfile")
+    pBar = ProgressBar(total=1000000)
+    test.openforappend()
+    for i in range(1000000):
+        test.append(i,"你好%d"%(1000-i + 35,))
+        pBar.addOne()
+    test.close()
+    test.openforread()
+    pBar.end()
+    for key in test.keys():
+        print(key,test[key],1000- key + 35)
+```
+
+
+### python GPU并行计算
+
+文档<http://www.cs.toronto.edu/~vmnih/docs/cudamat_tr.pdf>
+
+cudemat安装<http://blog.csdn.net/vola9527/article/details/41083499>
+
+注意要把cudamat文件夹生成的文件全部复制到python site-packages文件夹下，否则会报找不到dll的错误
+
+其实用GPU计算有很多不方便的地方，表示大部分时间都是cpu在搬运数据。
+
+下面是用GPU求乘积的一个例子：
+
+```python
+import cudamat as cm
+cm.init()
+r = []
+t0 = time.time()
+for i in range(1,262144):
+    r.append(1.1 + i)
+a = np.ndarray(buffer = np.array(r),shape = (len(r),1))
+a = cm.CUDAMatrix(a)
+a = cm.log(a,0)
+a = cm.sum(a,0)
+print(a.asarray(),time.time()-t0)
+cm.shutdown()
+```
+
+
+### debian 设置anaconda环境变量
+
+nano ~/.bashrc，加入以下命令（注销重新登录后生效，也可以source ~/.bashrc ）
+
+export PATH=$PATH:~/anaconda3/bin
+
+或者
+
+export PATH=~/anaconda3/bin:$PATH:
+
+
+### debian python下print 无法打印utf-8字符
+
+查看编码
+
+```python 
+>>> print(sys.stdout.encoding)
+ANSI_X3.4-1968
+>>> print(sys.getdefaultencoding())
+utf-8
+```
+
+原因是locale设置不正确
+```
+debian:~# apt-get install locales
+debian:~# dpkg-reconfigure locales
+debian:~# locale
+```
+
+没有su权限的话可以手动设置下stdout
+
+```python
+import sys
+import io
+
+def setup_io():
+  sys.stdout = sys.__stdout__ = io.TextIOWrapper(
+    sys.stdout.detach(), encoding='utf-8', line_buffering=True)
+  sys.stderr = sys.__stderr__ = io.TextIOWrapper(
+    sys.stderr.detach(), encoding='utf-8', line_buffering=True)
+```
+参见<http://www.tuicool.com/articles/EF3Ivuu>
+
+
+### 关于mysql lose connection的错误
+<http://stackoverflow.com/questions/1884859/lost-connection-to-mysql-server-during-query>

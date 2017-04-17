@@ -4,7 +4,7 @@ title: Set IPV6 on OpenWrt with NAT6
 date: 2017-01-09 15:46
 comments: true
 external-url:
-categories: OpenWrt
+categories: linux
 ---
 <br>
 ## Set IPv6

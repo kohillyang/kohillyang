@@ -4,7 +4,7 @@ title: 树莓派笔记
 date: 2017-01-22 19:40
 comments: true
 external-url:
-categories: 杂文
+categories: python linux
 ---
 <br>
 

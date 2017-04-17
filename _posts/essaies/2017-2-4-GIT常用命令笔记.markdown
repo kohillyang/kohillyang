@@ -85,6 +85,57 @@ gui.geometry=1205x669+228+228 276 304
 `<br>
 如果需要把项目还原到某个提交，则需要现在该次提交上创建分支，随后切换到该分支，随后到原来的分支上合并新建的分支。<br>
 未完待续
+14. 例子-创建一个仓库
 
+```bash
+echo "# graduate_design" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/kohillyang/graduate_design.git
+git push -u origin master
+```
+15. 例子-添加远程仓库
 
+```bash
+git remote add origin https://github.com/kohillyang/graduate_design.git
+git push -u origin master
+```
+16. 例子-更改默认mere.
 
+```bash
+git config --global --add merge.tool kdiff3
+git config --global --add mergetool.kdiff3.path "D:/PortableProgram/KDiff3/kdiff3.exe"
+git config --global --add mergetool.kdiff3.trustExitCode false
+
+git config --global --add diff.guitool kdiff3
+git config --global --add difftool.kdiff3.path "D:/PortableProgram/KDiff3/kdiff3.exe"
+git config --global --add difftool.kdiff3.trustExitCode false
+```
+
+17. 例子-远程创建git服务器
+
+原理利用ssh提供的隧道来传输，先在服务器上创建一个仓库
+
+```bash
+cd ~/gitwarehouse/graduatedesign/
+sudo git init --bare graduatedesign.git
+sudo chown -R kohill:kohill graduatedesign.git
+```
+
+注意chown -R是必须的，否则会出现 
+
+```bash
+fatal: Unable to create temporary file: Permission denied
+fatal: sha1 file '<stdout>' write error: Broken pipe
+```
+之类的错误。
+
+在本地机上用以下命令clone 
+
+```bash
+ssh://kohill@router.kohill.cn:32732/~/gitwarehouse/graduatedesign/graduatedesign.git
+```
+
+### linux上证书问题导致的Git无法验证的解决办法
+export GIT_SSL_NO_VERIFY=1

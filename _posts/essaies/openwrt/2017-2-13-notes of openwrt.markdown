@@ -4,7 +4,7 @@ title: Notes of openwrt
 date: 2017-02-13 19:40
 comments: true
 external-url:
-categories: OpenWrt 
+categories: linux
 permalink: /notes_openwrt
 ---
 <br>
@@ -15,7 +15,7 @@ permalink: /notes_openwrt
 　　[访问https://dev.openwrt.org/wiki/GetSource](https://dev.openwrt.org/wiki/GetSource)。
 
 ```bash
-sudo apt-get install gawk  libssh-dev  gcc g++ binutils patch bzip2 flex bison make autoconf gettext texinfo unzip sharutils subversion libncurses5-dev ncurses-term zlib1g-dev libperl-dev file libp11-kit-dev
+sudo apt-get install gawk  libssh-dev  gcc g++ binutils patch bzip2 flex bison make autoconf gettext texinfo unzip sharutils subversion libncurses5-dev ncurses-term zlib1g-dev libperl-dev file libp11-kit-dev build-essential
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 ```
@@ -523,6 +523,7 @@ Openwrt上配置Shadowsockes server
 3. <http://blog.csdn.net/hanshileiai/article/details/49302865>
 4. <https://github.com/shadowsocks/luci-app-shadowsocks>
 5. <https://github.com/shadowsocks/openwrt-shadowsocks/blob/master/Makefile#L51>
+6. <http://www.right.com.cn/forum/thread-204802-1-1.html>
 
 ### luci-theme-material（已测试）
 <https://github.com/LuttyYang/luci-theme-material/releases>
@@ -591,7 +592,7 @@ chmod +x /etc/init.d/debian_init
 /etc/init.d/debian_init enable
 ```
 
-如果遇到`must be a terminal`之类的错误
+如果遇到`must be a terminal`之类的错误，注意没有这行的话在新系统上运行的ssh可能也无法正常工作。
 
 ```bash
 mount -t devpts devpts /dev/pts
@@ -674,5 +675,56 @@ sudo apt-get -u install kde-core kde-i18n-zhcn
 ```bash
 dd if=/dev/zero of=~/swapfile bs=1024 count=512k
 mkswap ~/swapfile 
-sudo swapon /swapfile 
+sudo swapon ~/swapfile 
+```
+
+
+
+### windows10 bash设置代理
+
+```bash
+export http_proxy=socks5://127.0.0.1:8080
+export https_proxy=socks5://127.0.0.1:8080
+```
+
+
+### ubuntu 安装openjdk
+
+ubuntu 自带的源似乎没有更新到jdk8，只能用ppa安装
+
+```bash
+sudo add-apt-repository ppa:openjdk-r/ppa
+sudo apt-get update
+sudo apt-get install openjdk-8-jre
+```
+安装jdk7就很简单了
+
+```bash
+sudo apt-get install openjdk-7-jre
+```
+
+当系统有多个jre时，可以用下面的命令选择用哪一个：
+
+```bash
+sudo update-alternatives --config java
+```
+
+### MySql 设置PHP5
+<http://www.cnblogs.com/xianfangloveyangmei/p/3675494.html>
+关键在于在配置文件中加入
+
+```bash
+        list interpreter ".php=/usr/bin/php-cgi"
+```
+
+```bash
+config uhttpd 'main'
+        list listen_https '0.0.0.0:443'
+        option home '/www'
+        option redirect_https '1'
+        option cert '/root/utttp/fullchain.pem'
+        option key '/root/utttp/privkey.pem'
+        option cgi_prefix '/cgi-bin'
+        list listen_http '0.0.0.0:80'
+        list interpreter ".php=/usr/bin/php-cgi"
 ```

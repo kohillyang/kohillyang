@@ -4,7 +4,7 @@ title: Add https support for web server
 date: 2017-02-14 19:40
 comments: true
 external-url:
-categories: OpenWrt linux
+categories:  linux
 permalink: /add_https_for_web_server
 ---
 <br>

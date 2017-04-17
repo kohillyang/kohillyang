@@ -4,7 +4,7 @@ title: How to boot Openwrt kernel By Uefi.
 date: 2017-01-09 15:46
 comments: true
 external-url:
-categories: OpenWrt
+categories: linux
 ---
 
 ### How to boot EFI kernel using QEMU (kvm)?
@@ -16,6 +16,7 @@ categories: OpenWrt
 
 ```bash
 sudo kvm  --bios  ./OVMF.fd /dev/sdb -net nic,model=ne2k_pci -net user -soundhw es1370 -serial stdio
+sudo kvm  --bios  ./OVMF.fd /dev/loop0  -serial stdio
 ```
 [OVME点我下载]({{ site.github_cdn_prefix }}/OVMF-X64-r15214.zip)
 

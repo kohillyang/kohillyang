@@ -4,7 +4,7 @@ title: Notes of machine learning
 date: '2017-3-2 19:40'
 comments: true
 external-url: null
-categories: machine%20learning
+categories: machine-learning
 ---
 
 <br>

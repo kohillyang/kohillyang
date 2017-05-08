@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Notes of linux
+title: Linux
 date: 2017-02-13 19:40
 comments: true
 external-url:
@@ -67,6 +67,63 @@ losetup -d /dev/loop4
 nmap -p 3389 10.0.0.101
 
 
+### grub2-install
+```bash
+ losetup -fP disk1
+ ls /dev/loop0*
+ #   /dev/loop0  /dev/loop0p1  /dev/loop0p2  /dev/loop0p3
+ mount /dev/loop0p1 /mnt
+ cat > loop0device.map <<EOF
+ (hd0) /dev/loop0
+ EOF
+ grub-install --no-floppy --grub-mkdevicemap=loop0device.map --modules="part_msdos" --boot-directory=/mnt /dev/loop0 -v
+ umount /mnt
+losetup -d /dev/loop0
+qemu-system-x86_64 -m 512 -curses -hda disk1 -enable-kvm
+```
 
 
+### 文件管理器
+nautilus
 
+
+### grub2 可以加的启动参数列别
+<https://www.mjmwired.net/kernel/Documentation/kernel-parameters.txt>
+
+### linux字体全家桶
+<https://github.com/chrissimpkins/codeface>
+
+
+### 转socks5代理为http代理
+<http://blog.csdn.net/li740207611/article/details/52045471>
+<https://blog.phpgao.com/privoxy-shadowsocks.html>
+
+简单来说就是中介Privoxy把socks5转为http代理，只需要设置监听的端口和地址以及上层代理的地址即可。
+
+wget 设置代理
+
+```bash
+export http_proxy='http://localhost:8118'
+export https_proxy='http://localhost:8118'
+```
+
+
+### linux 下运行linux出错
+<https://bugs.launchpad.net/ubuntu/+source/swt-gtk/+bug/975560>
+
+```
+java.lang.UnsatisfiedLinkError: Could not load SWT library. Reasons:
+ no swt-pi-gtk-3740 in java.library.path
+ no swt-pi-gtk in java.library.path
+
+My java version:
+java version "1.7.0"
+Java(TM) SE Runtime Environment (build 1.7.0-b147)
+Java HotSpot(TM) 64-Bit Server VM (build 21.0-b17, mixed mode)
+
+Already tried the following:
+
+"sudo apt-get install libswt-gtk-3-java
+```
+原因是没有装图形
+`sudo apt-get install libswt-gtk-3-java`

@@ -72,7 +72,8 @@ net.core.rmem_max = 4194304
 2. transmission可以在luci中加入图形化配置菜单，命令为：`opkg install luci-app-transmission`，客户端从[transmission Remote GUI](https://sourceforge.net/projects/transgui/postdownload?source=dlp)下载。<br>
 3. 测试成功的transmission配置文件[点我下载]({{ site.github_cdn_prefix }}/openwrt/conf_file/transmission.conf)。<br>
 <br>
-4. 如果需要封锁IPv4访问，可在防火墙中将访问51413端口的包拒绝掉即可。
+4. --如果需要封锁IPv4访问，可在防火墙中将访问51413端口的包拒绝掉即可--。
+封掉端口只能保证外面的进不来，但是可能transmission会主动去连接别的客户端，最好的办法是直接封掉所有IPV4地址，可以自行Google transmission的block  list
 <br>
 5. 关于交换分区的设置，需要先在硬盘上分一个跟内存差不多大小的交换分区，确认路由器可以正常挂载硬盘之后：
 `block detect > /etc/config/fstab`<br>
@@ -215,6 +216,8 @@ ip6nat<https://sourceforge.net/projects/ipv6nat/?source=typ_redirect>
 Native Stack
 
 <https://wiki.openwrt.org/doc/uci/network6>
+
+<http://ict.jingyan.info/openwrt-%E7%94%A8odpcpd%E9%85%8D%E7%BD%AErelay-%E6%96%B9%E5%BC%8F-ipv6/>
 
 [WAN口获取单一IPv6地址时，内网使用IPv6的方法（教育网可用）](http://koolshare.cn/thread-24920-1-1.html)
 
@@ -390,4 +393,13 @@ ip -6 neigh add proxy 2001:250:1001:2500:a888:af6:36c5:a8cf dev pppoe-wan    #�
 
 　　本文不开放评论，如果对本文有任何疑问，可以到[这儿](https://github.com/kohillyang/personal-blog/issues)提交issue或者给本人发送邮件，邮件地址在网页最下方。
 
-
+<!--
+opkg install luci-app-hd-idle luci-app-upnp luci-app-ddns luci-app-minidlna luci-app-samba 
+opkg install luci-i18n-base-zh-cn
+opkg install http://lede-1252137436.file.myqcloud.com/aria2.ipk
+opkg install http://lede-1252137436.file.myqcloud.com/luci-app-aria2.ipk
+opkg install http://lede-1252137436.file.myqcloud.com/webui-aria2
+opkg install http://lede-1252137436.file.myqcloud.com/webui-aria2.ipk
+opkg install http://lede-1252137436.file.myqcloud.com/aria2_zh.ipk
+# opkg install http://lede-1252137436.file.myqcloud.com/luci-theme-material
+-->

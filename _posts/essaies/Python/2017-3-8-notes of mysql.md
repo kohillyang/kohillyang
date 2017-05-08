@@ -1,11 +1,13 @@
 ---
 layout: post
-title: Notes of mysql
+title: Mysql
 date: '2017-3-2 19:40'
 comments: true
 external-url: null
 categories: python mysql
 ---
+<br>
+
 ### 尽量使用参数化查询插入
 比如`cursor2.execute(sqlI,tuple(value))`实际上等效于：
 
@@ -101,3 +103,9 @@ mysql> flush privileges;
 重新启动MySQL
     /etc/init.d/MySQL restart
 就可以使用新密码 newpassword 登录了。
+
+
+
+### Lost connection to MySQL server during query
+
+<http://stackoverflow.com/questions/1884859/lost-connection-to-mysql-server-during-query>

@@ -6,8 +6,23 @@ comments: true
 external-url: null
 categories: python
 ---
+<br>
 
 本文的目的在于整理一些比较好用的python packages
+
+### Glmnet
+Glmnet is a package that fits a generalized linear model via penalized maximum likelihood. The regularization path is computed for the lasso or elasticnet penalty at a grid of values for the regularization parameter lambda. The algorithm is extremely fast, and can exploit sparsity in the input matrix  x. It fits linear, logistic and multinomial, poisson, and Cox regression models. A variety of predictions can be made from the fitted models. It can also fit multi-response linear regression。
+
+目测是关于线性回归方面的一个集合包（不懂）。
+
+<https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html#intro>
+
+### gensim
+[gensim](http://radimrehurek.com/gensim/tutorial.html)
+似乎自带Word2Vec？不知道效果好不好。
+似乎是一个文本挖掘的库，自带tf-idf？那我还为啥自己写？
+
+或许之前的朴素贝叶斯如果用近义词之类的可能稍微提高精度吧
 
 ### prettytable
 [rettytable](https://code.google.com/p/prettytable/)
@@ -22,10 +37,6 @@ categories: python
 
 ### bashplotlib
 [bashplotlib](https://github.com/glamp/bashplotlib)bashplotlib是一个绘图库，它允许你使用stdin绘制柱状图和散点图等。 
-
-### paramiko
-一个可以ssh远程登录的包
-<http://www.cnblogs.com/ma6174/archive/2012/05/25/2508378.html>
 
 ### Curses
 Python 下的一个控制控制台的库，可以改一下颜色位置之类的
@@ -58,6 +69,8 @@ with SCPClient(ssh.get_transport()) as scp:
 ### paramiko
 <http://www.cnblogs.com/yangmv/p/5169924.html>
 
+<http://www.cnblogs.com/ma6174/archive/2012/05/25/2508378.html>
+
 可以用来做远程登陆
 
 ```python
@@ -89,3 +102,8 @@ localpath=’/tmp/system.log’
 sftp.put(localpath,remotepath)
 t.close()
 ```
+
+
+### random
+random.shuffle (lst)
+对lst随机排序,shuffle:洗牌

@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: post
 title: Resume
 date: 2017-02-20 01:12
@@ -68,3 +68,4 @@ blueimp.Gallery([
   })
 
 </script>
+ -->

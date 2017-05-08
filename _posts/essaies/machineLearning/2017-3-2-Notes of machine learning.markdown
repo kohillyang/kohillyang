@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Notes of machine learning
+title: Machine Learning
 date: '2017-3-2 19:40'
 comments: true
 external-url: null
@@ -332,3 +332,56 @@ $$P_{idf}=\frac{\sum_{i}^N{1(单词在文档i中出现) }}{N}$$
 
 则有：
 $$\text{TF-IDF}=P_{tf}\times ln{P_{idf}}$$
+
+
+
+## 数据集
+<https://github.com/udacity/self-driving-car>
+
+开车的数据，可以下下来玩一玩
+
+Date Lighting Conditions Duration    Compressed Size Uncompressed    Direct Download Torrent MD5
+09/29/2016  Sunny   00:12:40    25G 40G HTTP    Torrent 33a10f7835068eeb29b2a3274c216e7d
+10/03/2016  Overcast    00:58:53    124G    183G    HTTP    Torrent 34362e7d997476ed972d475b93b876f3
+10/10/2016  Sunny   03:20:02    21G 23.3G       Torrent 156fb6975060f60c452a9fa7c4121195
+10/20/2016  Sunny   03:30:00    30G 40G     Torrent 13f107727bed0ee5731647b4e114a545
+
+### 汉密山尔顿路径问题
+一笔画问题,似乎在Mathmatica下面可以直接求解
+
+### 关于标签传播算法在graphchi下的实现
+<http://bickson.blogspot.com/2013/02/label-propagation-in-graphchi.html>
+
+### AUC
+<http://www.cnblogs.com/van19/p/5494908.html>
+
+### 一种快速生成指定分布非随机数的办法
+
+假设我们得到了一个没有归一化的概率分布向量phi=[0.5000,1.0000,1.5000,2.0000]
+
+```matlab
+cdf = cumsum(phi);
+samp_k = sum(cdf < rand()*cdf(end)) + 1;
+```
+我们希望能产生满足分布phi/sum(phi(:))的随机数，上面的代码达到了这一要求，但是发现计算cdf的时间复杂度为O(k)，计算samp_k的时间复杂度也为O(k), 即便可以降低为O(log(k)），但是还是比较高
+
+<https://hips.seas.harvard.edu/blog/2013/03/03/the-alias-method-efficient-sampling-with-many-discrete-outcomes/>中提供了一种以O(1)时间复杂度产生随机数的办法。
+
+### gensim
+谷歌提出来的一个Word2vec的模型。
+
+这里有他的一个应用
+<http://www.52nlp.cn/%E4%B8%AD%E8%8B%B1%E6%96%87%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E8%AF%AD%E6%96%99%E4%B8%8A%E7%9A%84word2vec%E5%AE%9E%E9%AA%8C/comment-page-1>
+
+### word2vec implementation (skip-gram with negative sampling) in Python
+<https://github.com/chtran/word2vec>
+
+
+### 关于准确率和召回率
+准确率 判断为正类的所有样本中实际为正类的样本比重 
+召回率 实际为正类的样本中占比为正类的比例
+F1: 精确值和召回率的调和平均（认为精确率和召回率同等重要
+
+### 最大熵模型
+
+最大熵原理是E.T. Jayness于上世纪50年代提出的，其基本思想是：对一个随机事件的概率分布进行预测时，在满足全部已知的条件下对未知的情况不做任何主观假设。从信息论的角度来说就是：在只掌握关于未知分布的部分知识时，应当选取符合这些知识但又能使得熵最大的概率分布。

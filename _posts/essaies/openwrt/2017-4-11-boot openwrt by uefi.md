@@ -6,6 +6,19 @@ comments: true
 external-url:
 categories: linux
 ---
+<br>
+
+### 关于kvm
+
+```bash
+kohill@ubuntu:/usr/bin$ ls *qemu*
+qemu-img  qemu-nbd          qemu-system-x86_64
+qemu-io   qemu-system-i386  qemu-system-x86_64-spice
+```
+
+kvm 目测是qemu-system-x86_64的符号链接，因为感觉功能是一样的，参数也通用。
+
+<https://gmplib.org/~tege/qemu.html>
 
 ### How to boot EFI kernel using QEMU (kvm)?
 
@@ -18,6 +31,14 @@ categories: linux
 sudo kvm  --bios  ./OVMF.fd /dev/sdb -net nic,model=ne2k_pci -net user -soundhw es1370 -serial stdio
 sudo kvm  --bios  ./OVMF.fd /dev/loop0  -serial stdio
 ```
+如果在编译的时候集成了virtio gpu driver, 可以试试下面的启动命令：
+
+```bash
+sudo kvm  --bios ./OVMF.fd  -serial stdio --set device.video0.driver=virtio-vga --display gtk,gl=on new.img
+```
+
+网卡参考<http://www.tuicool.com/articles/i63Ivy>
+
 [OVME点我下载]({{ site.github_cdn_prefix }}/OVMF-X64-r15214.zip)
 
 ### How to boot Openwrt using uefi?
@@ -37,6 +58,7 @@ grub-mkimage.exe -d i386-efi  -p /EFI/Boot/ -o bootia32.efi -O  i386-efi part_gp
 -p 是指定grub的前缀，相当于指定配置文件的目录，启动如果没有找到这个目录，那么会进入grub2命令行。ls命令可以查看分区啥的。
 
 命令会在当前目录下生成bootia32.efi文件，改名后复制到/EFI/Boot/下就行了。32位的UEFI固件启动的是/EFI/Boot/bootia32.efi,64位UEFI固件启动的是/EFI/Boot/bootx64.efi。然后可在/EFI/Boot/下新建一个Grub.cfg，里面可以创建菜单，加载字体，替换背景之类。
+
 
 ```bash
 set pager=1
@@ -91,5 +113,72 @@ menuentry "关机"{
 halt
 }
 ```
+自动挂载openwrtimg的脚本
+
+```bash
+mount:
+    losetup -fP new.img
+    mount -rw /dev/loop0p1 boot
+    mount -rw /dev/loop0p2 root
+del:
+    -umount boot
+    -umount root
+    -losetup -d /dev/loop0
+kvm:
+    kvm new.img --serial stdio 
+kvm-uefi:
+    kvm --bios OVMF.fd --serial stdio new.img 
+#--device virtio-gpu-pci 
+
+vmdk:
+    qemu-img convert -f raw new.img -O vmdk new.vmdk 
+grub:
+    losetup -fP new.img
+    ls /dev/loop0*
+    mount /dev/loop0p1 /mnt
+    echo "(hd0) /dev/loop0" > loop0device.map 
+    grub-install --no-floppy --grub-mkdevicemap=loop0device.map --modules="part_msdos" --boot-directory=/mnt /dev/loop0 -v
+    umount /mnt
+    losetup -d /dev/loop0
+kvm-nograph:
+    kvm new.img -net nic -net tap,ifname=vnet0,script=scripts/ifup.sh,downscript=script/ifdown.sh --serial stdio
+#-nographic
 
 
+.PHONY : del mount
+```
+
+### 关于grub2的详细教程
+请参阅<https://docs.google.com/document/d/1O9K0ZmrqPW4FuGMJ1s2fmpCmV8NR_BWD0PrNw3uopr8/preview>(需翻墙)
+
+
+
+### KVM如何以桥接方式联网
+首先是启动参数
+<pre>kvm new.img -net nic -net tap,ifname=vnet0,script=scripts/ifup.sh,downscript=script/ifdown.sh --serial stdio</pre>
+其中script指定了kvm 启动时要执行的脚本
+
+```bash
+#!/bin/bash
+#
+ifconfig br0 down
+bridge=br0
+brctl delbr br0
+brctl addbr br0 
+if [ -n "$1" ]; then
+        echo $*
+        ip link set $1 up
+        sleep 1
+        brctl addif $bridge $1
+        brctl addif br0 ens38
+#       brctl addif br0 ens40
+        ifconfig br0 up
+#       ip addr add 192.168.4.100 dev br0
+#       ip addr add 192.168.4.133 dev $1
+else
+        echo "Error: no interfacespecified."
+        exit 1
+```
+大概就是先创建一个网桥，然后把$1和宿主机中的网卡桥接起来。
+
+PS: 如果宿主机本身也是桥接方式联网，那么宿主机和kvm启动的虚拟机都可以自动从路由器dhcp获取地址。

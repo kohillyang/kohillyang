@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Notes of openwrt
+title: Openwrt
 date: 2017-02-13 19:40
 comments: true
 external-url:
@@ -728,3 +728,28 @@ config uhttpd 'main'
         list listen_http '0.0.0.0:80'
         list interpreter ".php=/usr/bin/php-cgi"
 ```
+
+
+### 设置时钟源
+<https://access.redhat.com/solutions/18627>
+
+
+### 读取内核日志
+`dmesg`
+
+
+### ttyd
+<https://github.com/tsl0922/ttyd>
+似乎没能安装成功，据说在lede上有二进制，有时间试一试吧
+
+### 设置时区
+`tzselect`
+
+### lede第三方编译固件
+<http://firmware.koolshare.cn/LEDE_X64_fw867/%E4%BF%A1%E6%AD%A5%E7%AD%89%E7%89%B9%E6%AE%8A%E6%9C%BA%E5%9E%8B%E4%B8%93%E7%94%A8/>
+
+
+
+### 如何在 Windows 下使用 Vim 的 YouCompleteMe 插件？
+
+<https://www.zhihu.com/question/25437050>

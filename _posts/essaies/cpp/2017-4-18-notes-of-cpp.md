@@ -1,11 +1,12 @@
 ---
 layout: post
-title: notes of cpp
+title: C Plus Plus
 date: 2017-4-18 19:40
 comments: true
 external-url:
 categories: cpp
 ---
+<br>
 
 [GCC优化选项](https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html)
 
@@ -100,4 +101,49 @@ clean:
       delete[] p;
       return str1;
   }
+```
+
+
+### Makefile 编译Qt
+
+Makefile 如下
+```bash
+
+PRO   = test.pro
+QMAKE = D:\PortableProgram\Qt5.8\5.8\mingw53_32\bin\qmake.exe
+
+all:  QtMakefile
+  $(MAKE) -f QtMakefile
+
+clean:
+  rm -fr QtMakefile QtMakefile.debug QtMakefile.release debug release
+
+QtMakefile:
+  $(QMAKE) -o QtMakefile $(PRO) CONFIG+=debug_and_release
+
+debug:  QtMakefile
+  $(MAKE) -f QtMakefile debug
+
+release:  QtMakefile
+  $(MAKE) -f QtMakefile release
+
+.PHONY: all clean debug clean-debug release clean-release
+```
+test.pro文件如下：
+
+```
+#include "DateTime.h"
+#include <QtGui/QGuiApplication>
+#include <QtQuick/QtQuick>
+int main( int argc, char * argv[] )
+{
+    QGuiApplication app(argc, argv);
+    DateTime datetime;
+    QQuickView view;
+    view.rootContext()->setContextProperty( "datetimeModel", &datetime );
+    view.setSource( QStringLiteral( "src/test.qml" ) );
+    view.show();
+    app.connect( view.engine(), SIGNAL( quit() ), SLOT( quit() ) );
+    return app.exec();
+}
 ```

@@ -418,3 +418,30 @@ def setup_io():
 ### Pylint
 
 pylint --generate-rcfile > .pylintrc
+
+### ubuntu16 下解决python3与python2的pip共存问题
+
+```bash
+apt-get remove python-pip python3-pip
+wget https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
+python3 get-pip.py
+```
+
+### pip 使用国内源
+pip3 install opencv-python -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+永久修改，一劳永逸：
+Linux下，修改 ~/.pip/pip.conf (没有就创建一个)， 修改 index-url至tuna，内容如下：
+
+```bash
+ [global]
+ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+``` 
+
+windows下，直接在user目录中创建一个pip目录，如：C:\Users\xx\pip，新建文件pip.ini，内容如下
+
+```bash 
+ [global]
+ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+```

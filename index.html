@@ -12,6 +12,10 @@ layout: default
       </center>
     </header>
   </div>
+
+
+  <div class="row"><b>精选文章</b></div>  
+  <div class="row"><b>所有文章</b></div>
   <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-8 offset-md-1">
@@ -28,8 +32,8 @@ layout: default
             <td><a href="{{ post.url | prepend: site.baseurl }}">{{post.title}}</td><td noWrap>{{post.date | date: '%b %d, %Y'}}</td></a>
             {% if forloop.last == false %}{% endif %}
             </tr>
-            {% endfor %} 
-        {% endfor %} 
+            {% endfor %}
+        {% endfor %}
       {% endfor %}
     </table>
     </div>

@@ -9,7 +9,7 @@ categories: machine-learning
 <br>
 
 所用的框架是mxnet，mxnet支持各种语言，比如ruby,python之类，中间也有一些坑：
-<p>ImageDetIter继承自，ImageIter，ImageIter的定义在`/usr/local/lib/python3.5/dist-packages/mxnet/image/image.py`中能找到，这个类会自动对图像做一些预处理，比如自动resize，自动减去平均值，自动根据方差归一化之类的，*值得注意的是，似乎方差和均值并不是根据输入的图像自动计算出来的，而是作为参数输入或者使用一个定值（传说中的magic number?）*。</p>
+<p>ImageDetIter继承自，ImageIter，ImageIter的定义在<code>/usr/local/lib/python3.5/dist-packages/mxnet/image/image.py</code>中能找到，这个类会自动对图像做一些预处理，比如自动resize，自动减去平均值，自动根据方差归一化之类的，*值得注意的是，似乎方差和均值并不是根据输入的图像自动计算出来的，而是作为参数输入或者使用一个定值（传说中的magic number?）*。</p>
 <p>一个典型的ImageDetIter的写法如下：</p>
 
 ```python
@@ -39,7 +39,7 @@ elif std is not None:
 ```
 <p>总之*方差和均值是可以通过mean和std传入的，想想居然有点小激动呢。*</p>
 <p>另外一个小地方要注意的是，`img_labeled.idx`和`img_labeled.rec`是用官方的img2rec.py制作的，在制作过程中会用到一个lst文件，对于普通的图像分类算法，这个文件是可以通过img2rec.py本身生成，对于对象检测等涉及到多标签的问题，lst需要自己生成，生成的例子如下：</p>
-
+<code>
 ```python
 import cv2,os,sys
 if len(sys.argv) > 1:
@@ -89,5 +89,6 @@ IMG2REC=./incubator-mxnet-master/tools/im2rec.py
 dataset:
   python3 $(IMG2REC) $(LST_FILE_PREFIX) $(IMGS_DIR) --pack-label=True
 ```
+</code>
 
 <p>*注意要加上--pack-label=True这个参数，反正注意就行了*<p>

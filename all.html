@@ -1,0 +1,42 @@
+---
+layout: default
+---
+<div class="container main">
+  <div class="row">
+    <header>
+      <div><center><h1>{{ site.title }}</h1></center></div>
+      <center>
+        <span class="big-ornament">
+          <img src="https://github.com/kohillyang/personal-blog/blob/master/logo.png?raw=true" style="width:10%">
+        </span>
+      </center>
+    </header>
+  </div>
+
+
+  <!-- <div class="row"><b>精选文章</b></div>
+  <a href="http://notes.kohill.cn/2017-02-20/Aria2Client-A-simple-Client-run-on-windows-for-Aria2.html">
+  <div class="row"><b>所有文章</b></div> -->
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-8 offset-md-1">
+    <table border="1" class = "table-responsive"
+      {% assign categories = site.categories | sort %}
+      {% for category in categories %}
+        <tr>
+          <th style = "vertical-align: middle">{{category.first}}
+          <th>date
+        </tr>
+        {% for posts in category %}
+           {% for post in posts %}
+            <tr>
+            <td><a href="{{ post.url | prepend: site.baseurl }}">{{post.title}}</td><td noWrap>{{post.date | date: '%b %d, %Y'}}</td></a>
+            {% if forloop.last == false %}{% endif %}
+            </tr>
+            {% endfor %}
+        {% endfor %}
+      {% endfor %}
+    </table>
+    </div>
+  </div>
+</div>

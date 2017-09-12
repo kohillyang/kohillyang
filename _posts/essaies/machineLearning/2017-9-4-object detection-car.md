@@ -37,9 +37,10 @@ if std is True:
 elif std is not None:
     assert isinstance(std, np.ndarray) and std.shape[0] in [1, 3]
 ```
-<p>总之*方差和均值是可以通过mean和std传入的，想想居然有点小激动呢。*</p>
+<p>总之方差和均值是可以通过mean和std传入的，想想居然有点小激动呢。</p>
+
 <p>另外一个小地方要注意的是，`img_labeled.idx`和`img_labeled.rec`是用官方的img2rec.py制作的，在制作过程中会用到一个lst文件，对于普通的图像分类算法，这个文件是可以通过img2rec.py本身生成，对于对象检测等涉及到多标签的问题，lst需要自己生成，生成的例子如下：</p>
-<code>
+
 ```python
 import cv2,os,sys
 if len(sys.argv) > 1:
@@ -89,6 +90,10 @@ IMG2REC=./incubator-mxnet-master/tools/im2rec.py
 dataset:
   python3 $(IMG2REC) $(LST_FILE_PREFIX) $(IMGS_DIR) --pack-label=True
 ```
-</code>
 
 <p>*注意要加上--pack-label=True这个参数，反正注意就行了*<p>
+
+
+### SSD Model
+
+<div><img src="{{ site.github_cdn_prefix }}/ml/2017-9-18-ssd-model.png" class="img-responsive center-block" style="width:100%;flow:left"></div>

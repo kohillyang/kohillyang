@@ -115,7 +115,7 @@ from itertools import chain
 >>> a = [1, 2, 3, 4]  
 >>> b = ['a', 'b', 'c']  
 >>> for x in chain(a, b):  
-...     print(x) 
+...     print(x)
 ```
 ### python 读取不同编码格式的文本
 1. 读取无BOM的UTF-8编码文件，open方法传入参数：encoding = 'utf-8'
@@ -129,10 +129,10 @@ from itertools import chain
 ```python
 import time
 import multiprocessing
- 
+
 def worker(d, key, value):
     d[key] = value
- 
+
 if __name__ == '__main__':
     print time.strftime('%y-%m-%d %H:%M:%S' ,   time.localtime())
     mgr = multiprocessing.Manager()
@@ -186,13 +186,13 @@ dok_matrix的一般用途是在创建矩阵的时候依次添加非零元，在�
 
 ```python
 #coding: utf-8
-import multiprocessing 
+import multiprocessing
 
-def func(x): 
-    print x * x 
+def func(x):
+    print x * x
 
-if __name__ == '__main__': 
-    pool = multiprocessing.Pool(4) 
+if __name__ == '__main__':
+    pool = multiprocessing.Pool(4)
     i_list = range(8)
     pool.map(func, i_list)
 ```
@@ -293,7 +293,7 @@ class disk_dic(object):
         self.db = sqlite3.connect(self.dbfilename)        
         self.db.execute('''CREATE TABLE XXX
        (HASH INT PRIMARY KEY     NOT NULL,
-       da           b    NOT NULL 
+       da           b    NOT NULL
        );''')            
     def openforappend(self):
         self.db = sqlite3.connect(self.dbfilename)
@@ -305,7 +305,7 @@ class disk_dic(object):
         self.db = sqlite3.connect(self.dbfilename)    
         self.cursor = self.db.cursor()       
     def __getitem__(self,key):
-        self.cursor.execute("SELECT * FROM xxx WHERE HASH=%d"%(hash(key),)) 
+        self.cursor.execute("SELECT * FROM xxx WHERE HASH=%d"%(hash(key),))
         da = self.cursor.fetchone()[1]       
         return loads(da)
     def append(self,key,item):
@@ -374,7 +374,7 @@ export PATH=~/anaconda3/bin:$PATH:
 
 查看编码
 
-```python 
+```python
 >>> print(sys.stdout.encoding)
 ANSI_X3.4-1968
 >>> print(sys.getdefaultencoding())
@@ -437,11 +437,36 @@ Linux下，修改 ~/.pip/pip.conf (没有就创建一个)， 修改 index-url至
 ```bash
  [global]
  index-url = https://pypi.tuna.tsinghua.edu.cn/simple
-``` 
+```
 
 windows下，直接在user目录中创建一个pip目录，如：C:\Users\xx\pip，新建文件pip.ini，内容如下
 
-```bash 
+```bash
  [global]
  index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 ```
+
+
+
+#### python2 安装jupyter-notebook kernel
+`sudo python -m pip install ipykernel`
+
+
+#### python profile
+python -m cProfile -o test1.out test1.py
+gprof2dot -f pstats test1.out | dot -Tpng -o test1.png
+
+
+### 跑mask-rcnn出现"g++: error: unrecognized command line option '-R'"的解决办法
+
+```bash
+g++ -pthread -shared -B /home/kohill/anaconda2/compiler_compat -L/home/kohill/anaconda2/lib -Wl,-rpath=/home/kohill/anaconda2/lib,--no-as-needed build/temp.linux-x86_64-2.7/mv_kernel.o build/temp.linux-x86_64-2.7/gpu_mv.o -L/usr/local/cuda/lib64 -L/home/kohill/anaconda2/lib -R/usr/local/cuda/lib64 -lcudart -lpython2.7 -o /home/kohill/maskrcnn.mxnet/rcnn/mask/gpu_mv.so
+g++: error: unrecognized command line option '-R'
+error: command 'g++' failed with exit status 1
+```
+
+```bash
+ nano ./lib/python2.7/site-packages/numpy/distutils/unixccompiler.py
+```
+
+@xiamenwcy I have the same mistake, In that file will -R changed to -Wl,-rpath=

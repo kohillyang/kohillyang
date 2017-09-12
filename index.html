@@ -1,10 +1,14 @@
----
+--- 
 layout: default
 ---
 <div class="container main">
   <div class="row">
     <header>
-      <div><center><h1>{{ site.title }}</h1></center></div>
+      <div>
+        <center>
+          <h1>{{ site.title }}</h1>
+        </center>
+      </div>
       <center>
         <span class="big-ornament">
           <img src="https://github.com/kohillyang/personal-blog/blob/master/logo.png?raw=true" style="width:10%">
@@ -12,11 +16,27 @@ layout: default
       </center>
     </header>
   </div>
-
-
-  <div class="row"><b>精选文章</b></div>  
-  <div class="row"><b>所有文章</b></div>
-  <div class="row">
+  <div class="container main">
+    <center>
+      <h2>精选文章</h2>
+    </center>
+    <div class="row" style="padding-left:50px">
+      <a href="http://notes.kohill.cn/2017-02-20/Aria2Client-A-simple-Client-run-on-windows-for-Aria2.html">Aria2Client</a>
+      <br>
+      <a href="http://notes.kohill.cn/2017-01-11/SmartCarCameraRead.html">SmardCarCameraRead</a>
+      <br>
+      <a href="http://notes.kohill.cn/2018-01-14/docker.html">Notes of docker</a>
+      <br>
+      <a href="http://notes.kohill.cn/linux">Notes of Linux</a>
+      <br>
+      <a href="http://notes.kohill.cn/notes_openwrt">Notes of Openwrt</a>
+      <br>
+      <a href="http://notes.kohill.cn/2018-01-14/model_conversion.html">Model conversion in deep learning.</a>
+      <br>
+      <a href="http://notes.kohill.cn/2017-01-09/Set-IPV6-on-OpenWrt-with-NAT6.html">Set IPV6 on OpenWrt with NAT6</a>
+    </div>
+  </div>
+  <!-- <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-8 offset-md-1">
     <table border="1" class = "table-responsive"
@@ -37,5 +57,5 @@ layout: default
       {% endfor %}
     </table>
     </div>
-  </div>
+  </div> -->
 </div>

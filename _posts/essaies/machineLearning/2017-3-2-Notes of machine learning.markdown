@@ -19,7 +19,7 @@ categories: machine-learning
 
 *[机器学习如何入门-知乎](https://www.zhihu.com/question/26006703)*
 
-<https://zhuanlan.zhihu.com/p/21930884?refer=intelligentunit> 
+<https://zhuanlan.zhihu.com/p/21930884?refer=intelligentunit>
 
 <https://www.analyticsvidhya.com/blog/2015/06/tuning-random-forest-model/>
 
@@ -378,10 +378,16 @@ samp_k = sum(cdf < rand()*cdf(end)) + 1;
 
 
 ### 关于准确率和召回率
-准确率 判断为正类的所有样本中实际为正类的样本比重 
+准确率 判断为正类的所有样本中实际为正类的样本比重
 召回率 实际为正类的样本中占比为正类的比例
 F1: 精确值和召回率的调和平均（认为精确率和召回率同等重要
 
 ### 最大熵模型
 
 最大熵原理是E.T. Jayness于上世纪50年代提出的，其基本思想是：对一个随机事件的概率分布进行预测时，在满足全部已知的条件下对未知的情况不做任何主观假设。从信息论的角度来说就是：在只掌握关于未知分布的部分知识时，应当选取符合这些知识但又能使得熵最大的概率分布。
+
+
+
+###  mxnet 保存模型为pdf
+`mx.viz.plot_network(sym).view()`
+其中sym为符号文件

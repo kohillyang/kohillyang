@@ -56,7 +56,7 @@ gui.geometry=1205x669+228+228 276 304
 5. 文件有跟踪和未跟踪两种状态，如果希望文件不出现在未跟踪列表里，可在目录下创建`.gitignore`文件指定，文件名支持正则表达式，注意文件只支持单行注释（以#开头），比如：<br>
 
 ```
-*.[oa] 
+*.[oa]
 # ignore all files ending with '.o' or '.a'.
 *~
 # ignore all files ending with '~'.
@@ -123,7 +123,7 @@ sudo git init --bare graduatedesign.git
 sudo chown -R kohill:kohill graduatedesign.git
 ```
 
-注意chown -R是必须的，否则会出现 
+注意chown -R是必须的，否则会出现
 
 ```bash
 fatal: Unable to create temporary file: Permission denied
@@ -131,7 +131,7 @@ fatal: sha1 file '<stdout>' write error: Broken pipe
 ```
 之类的错误。
 
-在本地机上用以下命令clone 
+在本地机上用以下命令clone
 
 ```bash
 ssh://kohill@router.kohill.cn:32732/~/gitwarehouse/graduatedesign/graduatedesign.git
@@ -139,3 +139,7 @@ ssh://kohill@router.kohill.cn:32732/~/gitwarehouse/graduatedesign/graduatedesign
 
 ### linux上证书问题导致的Git无法验证的解决办法
 export GIT_SSL_NO_VERIFY=1
+
+
+### 保存密码
+git config --global credential.helper store

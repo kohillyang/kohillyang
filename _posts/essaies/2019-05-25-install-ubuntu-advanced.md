@@ -9,7 +9,7 @@ sudo mount -o bind /dev ./rootfs/dev
 sudo mount -o bind /sys ./rootfs/sys
 sudo mount -t proc proc ./rootfs/proc
 sudo chroot rootfs/
-
+sudo apt install nano
 mount -t devpts devpts /dev/pts
 adduser ubuntu
 sudo dpkg-reconfigure locales

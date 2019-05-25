@@ -1,3 +1,4 @@
+```bash
 sudo apt update
 sudo apt install debootstrap
 sudo mount /dev/sda3 rootfs
@@ -21,3 +22,4 @@ cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 sudo apt install ubuntu-desktop
 
 
+```

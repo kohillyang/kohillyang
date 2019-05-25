@@ -5,9 +5,9 @@ sudo mount /dev/sda3 rootfs
 sudo debootstrap --verbose --arch=amd64 xenial rootfs/ http://mirrors.aliyun.com/ubuntu
 
 
-mount -o bind /dev ./rootfs/dev
-mount -o bind /sys ./rootfs/sys
-mount -t proc proc ./rootfs/proc
+sudo mount -o bind /dev ./rootfs/dev
+sudo mount -o bind /sys ./rootfs/sys
+sudo mount -t proc proc ./rootfs/proc
 sudo chroot rootfs/
 adduser ubuntu
 dpkg-reconfigure console-setup

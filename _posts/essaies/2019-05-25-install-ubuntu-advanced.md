@@ -12,9 +12,11 @@ sudo chroot rootfs/
 sudo apt install nano
 mount -t devpts devpts /dev/pts
 adduser ubuntu
+sudo locale-gen en_US en_US.UTF-8
 sudo dpkg-reconfigure locales
 sudo dpkg-reconfigure console-setup
-sudo apt update && sudo apt install linux-generic grub-pc
+sudo apt update && sudo apt install linux-generic
+# grub-pc
 
 寻找根文件分区的 UUID:
 ls -l /dev/disk/by-uuid/ |grep sda3

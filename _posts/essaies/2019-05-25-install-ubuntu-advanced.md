@@ -10,7 +10,8 @@ sudo mount -o bind /sys ./rootfs/sys
 sudo mount -t proc proc ./rootfs/proc
 sudo chroot rootfs/
 adduser ubuntu
-dpkg-reconfigure console-setup
+sudo dpkg-reconfigure locales
+sudo dpkg-reconfigure console-setup
 sudo apt update && sudo apt install linux-generic grub-pc
 
 寻找根文件分区的 UUID:

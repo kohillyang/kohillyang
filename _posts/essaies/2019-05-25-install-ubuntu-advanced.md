@@ -3,7 +3,7 @@ sudo apt update
 sudo apt install debootstrap
 sudo mount /dev/sda3 rootfs
 sudo debootstrap --verbose --arch=amd64 xenial rootfs/ http://mirrors.aliyun.com/ubuntu
-
+sudo debootstrap https://mirrors.tuna.tsinghua.edu.cn/ubuntu/
 
 sudo mount -o bind /dev ./rootfs/dev
 sudo mount -o bind /sys ./rootfs/sys

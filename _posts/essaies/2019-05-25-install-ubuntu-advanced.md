@@ -8,7 +8,7 @@ sudo debootstrap --verbose --arch=amd64 xenial rootfs/ http://mirrors.aliyun.com
 sudo mount -o bind /dev ./rootfs/dev
 sudo mount -o bind /sys ./rootfs/sys
 sudo mount -t proc proc ./rootfs/proc
-sudo mount -t devpts /dev/pts ./rootfs/dev/pts
+mount -t devpts devpts /dev/pts
 sudo chroot rootfs/
 adduser ubuntu
 sudo dpkg-reconfigure locales

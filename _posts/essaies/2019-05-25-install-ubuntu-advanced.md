@@ -32,7 +32,9 @@ EOF
 
 dpkg-reconfigure locales
 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-sudo apt install ubuntu-desktop
 
+安装自己喜欢的桌面
+sudo apt install ubuntu-desktop
+suodo apt install gnome-core xorg
 
 ```

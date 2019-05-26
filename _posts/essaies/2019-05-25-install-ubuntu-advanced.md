@@ -36,6 +36,10 @@ umount /dev/pts
 sudo apt clean
 exit
 
+umount rootfs/dev
+umount rootfs/proc
+umount rootfs/sys
+
 退出chroot环境之后，将rootfs打包，然后用livecd启动，然后在给定分区解包
 下面最难的一部分：引导该系统
 ```

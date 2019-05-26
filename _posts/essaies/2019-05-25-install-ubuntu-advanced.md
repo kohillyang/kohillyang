@@ -10,7 +10,7 @@ sudo mount -t proc proc ./rootfs/proc
 sudo chroot rootfs/
 
 
-下面的命令在chroot环境中执行
+下面的命令在chroot环境中执行, 注意不要在screen命令中执行，可以在ssh中执行
 mount -t devpts devpts /dev/pts
 sudo apt install nano
 adduser ubuntu

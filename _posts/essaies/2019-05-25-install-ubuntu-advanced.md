@@ -1,5 +1,5 @@
 ```bash
-找一台可以联网的ubuntu电脑， 可以是WSL，不要求版本
+找一台可以联网的ubuntu电脑， 可以是WSL，不要求版本，livecd我这边测试失败，因此不建议livecd。
 sudo apt update
 sudo apt install debootstrap
 mkdir rootfs

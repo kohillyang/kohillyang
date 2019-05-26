@@ -19,8 +19,8 @@ sudo locale-gen en_US en_US.UTF-8
 sudo dpkg-reconfigure locales
 sudo dpkg-reconfigure console-setup
 
-
-# sudo apt update && sudo apt install linux-generic
+下面的命令会弹出grub的安装菜单，建议选择跳过安装grub。
+sudo apt update && sudo apt install linux-generic
 # grub-pc
 
 寻找根文件分区的 UUID:

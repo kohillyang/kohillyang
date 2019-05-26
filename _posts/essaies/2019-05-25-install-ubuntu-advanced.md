@@ -26,16 +26,16 @@ sudo apt update && sudo apt install linux-generic
 寻找根文件分区的 UUID:
 ls -l /dev/disk/by-uuid/ |grep sda3
 
-cat >  /etc/fstab << "EOF"
-proc /proc proc defaults 0 0
-UUID=d8b27c84-b572-46ab-a75f-273c42fe70ec / ext4 defaults,errors=remount-ro,relatime 0 1
-EOF
 
-dpkg-reconfigure locales
 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 安装自己喜欢的桌面
 sudo apt install ubuntu-desktop
-suodo apt install gnome-core xorg
+sudo apt install gnome-core xorg
+umount /dev/pts
+sudo apt clean
+exit
 
+退出chroot环境之后，将rootfs打包，然后用livecd启动，然后在给定分区解包
+下面最难的一部分：引导该系统
 ```

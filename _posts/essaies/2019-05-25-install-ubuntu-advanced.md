@@ -1,8 +1,9 @@
 ```bash
+找一台可以联网的ubuntu电脑
 sudo apt update
 sudo apt install debootstrap
 mkdir rootfs
-sudo mount /dev/sda3 rootfs
+# sudo mount /dev/sda3 rootfs
 sudo debootstrap --verbose --arch=amd64 xenial rootfs/ https://mirrors.tuna.tsinghua.edu.cn/ubuntu/
 sudo mount -o bind /dev ./rootfs/dev
 sudo mount -o bind /sys ./rootfs/sys

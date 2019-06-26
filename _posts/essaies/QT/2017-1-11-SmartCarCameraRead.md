@@ -9,7 +9,7 @@ categories: Projects
 <br>
 v0.3之后版本的截图：<br>
 
-<div><img src="http://ok0rtur47.bkt.clouddn.com/2017-1-11-image002.png" class="img-responsive center-block" style="width:100%" ></div><br>
+<div><img src="/assets/screenshots/image010.png" class="img-responsive center-block" style="width:100%" ></div><br>
 
 部分更新如下：
 1. 自动缩放图像，对高分屏更友好
@@ -27,7 +27,7 @@ v0.3之后版本的截图：<br>
 项目托管地址：https://github.com/kohillyang/smart-car-camera-read-by-jlink-and-qt<br>
 
 软件v0.1-0.2版本截图：<br>
-<div><img src="http://ok0rtur47.bkt.clouddn.com/2017-1-11-image002.jpg" class="img-responsive center-block" style="width:100%"></div><br>
+<div><img src="/assets/screenshots/image011.jpg" class="img-responsive center-block" style="width:100%"></div><br>
 
 依赖Visual C++ Redistributable for visual Studio 2015，下载链接：https://www.microsoft.com/en-us/download/details.aspx?id=48145<br>
 

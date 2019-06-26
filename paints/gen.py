@@ -40,7 +40,7 @@ strafter='''
 </script>
 </div>
 '''
-urlprefex="https://raw.githubusercontent.com/kohillyang/personal-blog/master/paints/"
+urlprefex="/paints/"
 urlsuffix=""
 strformat='''
           carouselLinks.push({

@@ -11,6 +11,6 @@ github_username: kohillyang
 simple_search: http://google.com/search
 markdown: kramdown
 cdn_prefix: http://ok0rtur47.bkt.clouddn.com
-github_cdn_prefix: https://cdn.rawgit.com/kohillyang/personal-blog/master/assets
+github_cdn_prefix: /assets
 encoding: utf-8
 permalink: /:year-:month-:day/:title.html

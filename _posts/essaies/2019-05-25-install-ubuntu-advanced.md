@@ -1,3 +1,11 @@
+---
+layout: post
+title: Install ubuntu advanced.
+date: 2019-05-25 3:15
+comments: true
+external-url:
+categories: 杂文
+---
 ```bash
 找一台可以联网的linux电脑， 可以是WSL，不要求版本，livecd我这边测试失败（理论上是可以的），因此不建议livecd, 无论是在WSL上还是在原生linux，建议在home下执行下面的命令，不建议在/mnt下执行下面的命令，所有的命令需要sudo，并且需要分区具有可执行权限（注意是分区而不是文件）。另外建议被安装的机器可以通过DHCP上网（可以配合windows网络共享以及hdcpsrv解决—）
 sudo apt update

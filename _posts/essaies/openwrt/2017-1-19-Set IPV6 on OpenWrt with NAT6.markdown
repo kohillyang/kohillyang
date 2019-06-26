@@ -28,7 +28,7 @@ reboot
 ```
 <br>
 　　稍后路由器会自动重启，重启之后等待半分钟左右，在shell中执行`logread | grep NAT6`查看结果：<br>
-  <img src="http://ok0rtur47.bkt.clouddn.com/2017-1-17-image003.png"  class="img-responsive center-block" style="width:100%"><br>
+  <img src="{{ site.cdn_prefix }}/2017-1-17-image003.png"  class="img-responsive center-block" style="width:100%"><br>
 　　一切正常的话，这时候电脑应该能正常访问ipv6站点了。
 <br>
 
@@ -167,7 +167,7 @@ chmod +x /etc/init.d/aria2
 
 访问[WebUI](http://dy.ghostry.cn/)或者[Aria2 Web Interface](https://qcloud.kohill.cn/aria2/)即可看到控制台，注意https下Chrome可能会拦截与路由器（http://192.168.1.1:6800） 之间的非安全连接，请手动允许。<br>
 　　配置文件解释:[aria2 Documation](https://aria2.github.io/manual/en/html/aria2c.html#cmdoption-V)。<br>
-<img src="{{ site.github_cdn_prefix }}/screenshots/2017-2-15 0000.jpg" class="img-responssive"><br>
+<img src="{{ site.github_cdn_prefix }}/screenshots/2017-2-15 0000.jpg" class="img-responssive" style="width:100%"><br>
 
 ## Some IPv6 sites
 

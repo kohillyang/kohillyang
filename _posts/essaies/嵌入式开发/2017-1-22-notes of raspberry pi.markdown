@@ -166,7 +166,7 @@ while True:
 |   IRQ       |   GPIO.1   |
 
 运行示例程序，打印出以下信息：<br>
-<img src="http://ok0rtur47.bkt.clouddn.com/2017-1-22-image001.png" class="img-responsive center-block" style="width:100%">
+<img src="{{ site.cdn_prefix }}/2017-1-22-image001.png" class="img-responsive center-block" style="width:100%">
 
 关闭应答下的单片机端初始化程序：
 <br>

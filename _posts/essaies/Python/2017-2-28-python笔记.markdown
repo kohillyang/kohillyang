@@ -5,6 +5,7 @@ date: 2017-2-28 19:40
 comments: true
 external-url:
 categories: python
+permalink: /python
 ---
 <br>
 
@@ -470,3 +471,108 @@ error: command 'g++' failed with exit status 1
 ```
 
 @xiamenwcy I have the same mistake, In that file will -R changed to -Wl,-rpath=
+
+
+
+### How to call `C#` from Python.
+There are two cases. One case is that your code us written by pure Python, Then IronPython is suitable.
+But another case which is more common is that the offical default C written Python is used, especially you need libraries written in C or C++, there is 
+PythonDotNet which allows using C# libraries in the normal C Python runtime.
+
+First, you need to install Mono if you are using ubuntu from `https://www.mono-project.com/download/stable/#download-lin`, or just follow the following steps:
+
+For ubuntu 18.04
+```bash
+sudo apt install gnupg ca-certificates
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+sudo apt update
+sudo apt install mono-devel
+```
+
+For ubuntu 16.04
+```bash
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+sudo apt install apt-transport-https ca-certificates
+echo "deb https://download.mono-project.com/repo/ubuntu stable-xenial main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+sudo apt update
+sudo apt install mono-devel
+```
+
+use command `mono --version` to check if mono has successfully been installed.
+```
+
+Mono JIT compiler version 5.20.1.19 (tarball Thu Apr 11 09:09:21 UTC 2019)
+Copyright (C) 2002-2014 Novell, Inc, Xamarin Inc and Contributors. www.mono-project.com
+        TLS:           __thread
+        SIGSEGV:       altstack
+        Notifications: epoll
+        Architecture:  amd64
+        Disabled:      none
+        Misc:          softdebug 
+        Interpreter:   yes
+        LLVM:          yes(600)
+        Suspend:       hybrid
+        GC:            sgen (concurrent by default)
+```
+
+And install several dependencies if you are using ubuntu.
+```
+sudo apt-get install clang libglib2.0-dev
+```
+
+if you are using windows, the pre-built wheel binary can be downloaded from <http://www.lfd.uci.edu/~gohlke/pythonlibs/#pythonnet>.
+
+Then install `pythonnet` inside anaconda by `python3 -m pip install pythonnet`.
+
+A IDE is needed to create an project, for example, on ubuntu, monodevelop is a good choice, you can install it by `sudo apt install monodevelop`.
+
+<img src="{{ site.github_cdn_prefix }}/screenshots/2019-07-15-14-36-37.png"  class="img-responsive center-block" style="width:100%"><br>
+
+Create a project, assuming its output is `SplineInsertPoint.dll`. Python for .NET uses the PYTHONPATH (sys.path) to look for assemblies to load, in addition to the usual application base and the GAC. To ensure that you can implicitly import an assembly, put the directory containing the assembly in sys.path.
+```C#
+using System;
+namespace COT
+{
+    public class PointClass
+    {
+        public double x = 0;
+        public double y = 0;
+        public PointClass(double _x, double _y)
+        {
+            x = _x; y = _y;
+        }
+    }
+    public static class SplineMath
+    {
+        public static double[] SplineInsertPoint(PointClass[] points, double[] xs, int chf)
+        {
+            double[] a = new double[10];
+            return a;
+        }
+    }
+}
+
+```
+
+Then you can call SplineInsertPoint inside cython using the following codes:
+```python
+import clr
+clr.AddReference('SplineInsertPoint')
+from COT import PointClass as PointClassDotNet
+from COT import SplineMath as SplineMathDotNet
+import System
+points_dotnet = System.Array.CreateInstance(PointClassDotNet, points.Length)
+for i in range(points.Length):
+    points_dotnet[i] = PointClassDotNet(points[i].x, points[i].y)
+
+xs_dotnet = System.Array.CreateInstance(System.Double, xs.Length)
+for i in range(xs.Length):
+    xs_dotnet[i] = xs[i]
+# print(SplineMathDotNet.SplineInsertPoint.__doc__)
+r = SplineMathDotNet.SplineInsertPoint(points_dotnet, xs_dotnet, chf)
+r = np.array([x for x in r]).astype(np.double)
+return r
+```
+
+You can visit <http://pythonnet.github.io/> for more information.

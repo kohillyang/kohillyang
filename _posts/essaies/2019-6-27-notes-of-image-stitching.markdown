@@ -7,12 +7,28 @@ external-url:
 categories: 杂文
 ---
 <br>
+### libelas
+    给定两张图片，这个库可以给出视差图
+
+### 多视图几何参考书籍：
+    参考https://zhuanlan.zhihu.com/p/34995102
+	《Multiple View Geometry in Computer Vision (Second Edition)》
+	
+###  状态估计参考论文
+	state estimation for robotics
+
+### 三维空间优化
+	Lie groups, Lie algebras, projective geometry and optimization for 3D Geometry, Engineering and Computer Vision
+
+### 四元数动力学
+	https://arxiv.org/pdf/1711.02508.pdf
+	Quaternion kinematics for the error-state Kalman filter
 
 ### Optimal Ray Intersection For Computing 3D Points From N-View Correspondences
 Optimal Ray Intersection For Computing 3D Points From N-View Correspondences
 
 Python 实现代码：
-"""Python
+```Python
 def triangulatePoints(list_of_re_projection_matrix, list_of_mn):
     # type: ([np.ndarray], [np.ndarray]) -> np.ndarray
     sum_A = np.zeros(shape=(3, 3))
@@ -42,7 +58,7 @@ def triangulatePoints(list_of_re_projection_matrix, list_of_mn):
                            [-1 * a * c * x - b * c * y + (1 - c ** 2) * z]])
     x = np.linalg.inv(sum_A).dot(sum_b)
     return x
-"""
+```
 
 ### 经典论文
 `1`. <http://matthewalunbrown.com/papers/ijcv2007.pdf>
@@ -100,4 +116,5 @@ D_k = sin\theta_0 cos \phi_0 \times sin(\theta_1 + \Delta \theta) sin (\phi_1 + 
     - sin \theta_0 sin \phi_0 sin(\theta_1 + \Delta \theta)cos (\phi_1 + \Delta \phi) \Delta z +  sin \theta_0 sin \phi_0 \times \Delta x \times cos (\theta_1 + \Delta \theta) \\
     +   cos \theta_0 sin(\theta_1 + \Delta \theta)cos (\phi_1 + \Delta \phi) \Delta y -  cos \theta_0  \Delta x  sin(\theta_1 + \Delta \theta) sin (\phi_1 + \Delta \phi) 
 $$
+
 

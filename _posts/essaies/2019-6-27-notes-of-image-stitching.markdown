@@ -5,6 +5,7 @@ date: 2019-6-27 3:15
 comments: true
 external-url:
 categories: 杂文
+permalink: /image_stitch
 ---
 <br>
 ### libelas
@@ -118,3 +119,32 @@ D_k = sin\theta_0 cos \phi_0 \times sin(\theta_1 + \Delta \theta) sin (\phi_1 + 
 $$
 
 
+### Jau 30th 结果
+
+用colmap重建出的点云经过重采样后的结果
+
+<img src="{{ site.github_cdn_prefix }}/screenshots/2020-01-30-22-54-03.png" class="img-responsive" style="width:80%;margin-left:2%"/><br>
+
+
+使用泊松表面重建的结果
+
+<img src="{{ site.github_cdn_prefix }}/screenshots/2020-01-30-23-02-35.png" class="img-responsive" style="width:80%;margin-left:2%"/><br>
+
+使用delaunay三角化进行表面重建的结果
+
+<img src="{{ site.github_cdn_prefix }}/screenshots/2020-01-30-23-04-11.png" class="img-responsive" style="width:80%;margin-left:2%"/><br>
+
+效果比使用泊松表面重建要好上不少，但是很多地方有毛刺
+
+如果直接对上面的点云使用法线贴图：
+
+<img src="{{ site.github_cdn_prefix }}/screenshots/2020-01-30-23-05-43.png" class="img-responsive" style="width:80%;margin-left:2%"/><br>
+
+因为毛刺的存在，其实效果并不是很好：
+
+<img src="{{ site.github_cdn_prefix }}/screenshots/2020-01-30-23-07-40.png" class="img-responsive" style="width:80%;margin-left:2%"/><br>
+
+目前正在尝试寻找使用moving least square 来对点云进行平滑， 一个参考资料为:
+<http://www.pointclouds.org/assets/files/presentations/ICCV2011-surface.pdf>
+
+<img src="{{ site.github_cdn_prefix }}/screenshots/2020-01-31-00-33-50.png" class="img-responsive" style="width:80%;margin-left:2%"/><br>

@@ -864,3 +864,182 @@ java -jar ruyi.jar -p             0              bvlc_alexnet_deploy.prototxt   
 PS:  windows的ruyistudio有一整套的mapper， 不用安装。
 (2) 
 
+### 虚拟屏幕
+使用XVFB可以和Vncserver搭配出临时的远程桌面，参见：
+<https://www.jianshu.com/p/ca48dd05ef7f>
+
+### Openvpn Tap 模式
+server.conf:
+先用apt install openvpn安装openvpn，再从openvpn的github主页下载easyrsa2.2.2生成下面的文件：
+```
+ca /root/openvpn/EasyRSA-2.2.2/keys/ca.crt
+cert /root/openvpn/EasyRSA-2.2.2/keys/server.crt
+key /root/openvpn/EasyRSA-2.2.2/keys/server.key
+dh /root/openvpn/EasyRSA-2.2.2/keys/dh2048.pem
+```
+
+```bash
+port 1194 #- port
+proto udp #- protocol
+dev tun
+tun-mtu 1500
+tun-mtu-extra 32
+mssfix 1450
+reneg-sec 0
+ca /root/openvpn/EasyRSA-2.2.2/keys/ca.crt
+cert /root/openvpn/EasyRSA-2.2.2/keys/server.crt
+key /root/openvpn/EasyRSA-2.2.2/keys/server.key
+dh /root/openvpn/EasyRSA-2.2.2/keys/dh2048.pem
+# plugin  /usr/lib/openvpn/plugins/openvpn-plugin-auth-pam.so /etc/pam.d/login #- Comment this line if you are using FreeRADIUS
+#plugin /etc/openvpn/radiusplugin.so /etc/openvpn/radiusplugin.cnf #- Uncomment this line if you are using FreeRADIUS
+# client-cert-not-required
+# username-as-common-name
+server 10.8.0.0 255.255.255.0
+push "redirect-gateway def1"
+push "dhcp-option DNS 8.8.8.8"
+push "dhcp-option DNS 8.8.4.4"
+keepalive 5 30
+comp-lzo
+persist-key
+persist-tun
+status 1194.log
+verb 3
+```
+
+client1.ovpn
+```
+client client1
+dev tun
+proto udp
+remote 101.37.81.143 1194
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+comp-lzo
+verb 3
+ca "C://Users/kohil/Desktop/ov/ca.crt"
+cert "C://Users/kohil/Desktop/ov/client1.crt"
+key "C://Users/kohil/Desktop/ov/client1.key"
+```
+
+### Openvpn Tap 模式
+直接按官网的tutorial会上不了网，有两个解决办法，一个办法参照<http://keyvanfatehi.com/2016/02/10/How-to-setup-OpenVPN-with-TAP-bridging-on-Ubuntu-14-04/>
+
+另外一种办法：
+首先创建一个虚拟网卡：
+```sh
+#!/bin/bash
+USER="root"
+TAP_NETWORK="192.168.78.1"
+TAP_DEV_NUM=0
+DESC="TAP config"
+
+tunctl -t veth$TAP_DEV_NUM -u root
+ifconfig veth$TAP_DEV_NUM ${TAP_NETWORK}  netmask 255.255.255.0 promisc
+ifconfig veth$TAP_DEV_NUM
+```
+
+创建一个以太网桥，并把上面创建的虚拟网卡加入到这个桥中：
+```bash
+#!/bin/bash
+
+#################################
+# Set up Ethernet bridge on Linux
+# Requires: bridge-utils
+#################################
+
+# Define Bridge Interface
+br="br0"
+
+# Define list of TAP interfaces to be bridged,
+# for example tap="tap0 tap1 tap2".
+tap="tap0"
+# tunctl -b
+# ip link set tap0 up
+# Define physical ethernet interface to be bridged
+# with TAP interface(s) above.
+eth="veth0"
+eth_ip="192.168.78.1"
+eth_netmask="255.255.255.0"
+eth_broadcast="192.168.78.255"
+
+for t in $tap; do
+    openvpn --mktun --dev $t
+done
+
+brctl addbr $br
+brctl addif $br $eth
+
+for t in $tap; do
+    brctl addif $br $t
+done
+
+for t in $tap; do
+    ifconfig $t 0.0.0.0 promisc up
+done
+
+ifconfig $eth 0.0.0.0 promisc up
+
+ifconfig $br $eth_ip netmask $eth_netmask broadcast $eth_broadcast
+
+···
+
+更改server.conf，设置为tap模式：
+```
+port 1194
+proto udp
+server-bridge 192.168.78.1 255.255.255.0 192.168.78.128 192.168.78.254
+dev tap0
+ca /root/openvpn/EasyRSA-2.2.2/keys/ca.crt
+cert /root/openvpn/EasyRSA-2.2.2/keys/server.crt
+key /root/openvpn/EasyRSA-2.2.2/keys/server.key
+dh /root/openvpn/EasyRSA-2.2.2/keys/dh2048.pem
+# up "/etc/openvpn/up.sh br0"
+# down "/etc/openvpn/down.sh br0"
+ifconfig-pool-persist ipp.txt
+keepalive 10 600
+duplicate-cn
+persist-key
+# persist-tun
+verb 3
+mute 20
+status openvpn-status.log
+# topology subnet
+# duplicate-cn
+#set the dns servers
+# push "dhcp-option DNS 192.168.78.1"
+# #set the WINS server (SAMBA)
+# push "dhcp-option WINS 192.168.78.1"
+# push "route 0.0.0.0 0.0.0.0 192.168.78.1"
+# ip-win32
+client-to-client
+```
+
+在本地windows10 上安装OpenVPN 2.4，新建一个配置项，然后导入：
+```
+dev tap
+proto udp
+remote 101.37.81.143 1194
+resolv-retry infinite
+nobind
+persist-key
+verb 3
+ca "C://Users/kohil/Desktop/ov/ca.crt"
+cert "C://Users/kohil/Desktop/ov/client2.crt"
+key "C://Users/kohil/Desktop/ov/client2.key"
+tls-client
+```
+
+安装后会在网络设备管理器里多一个Tap设备，将其更改为tap-bridge，并手动设置ip和网关。
+<img src="{{ site.cdn_prefix }}/screenshots/2020-02-10-18-10-48.png" class="img-ressponssive" style="width: 90%;margin-left: 3%">
+
+<img src="{{ site.cdn_prefix }}/screenshots/2020-02-10-18-11-33.png" class="img-ressponssive" style="width: 90%;margin-left: 3%">
+
+设置nat让从vpn访问外网(来自<https://www.cnblogs.com/Security-Darren/p/4576731.html>)：
+```
+sudo iptables -A FORWARD -o eth0 -i eth1 -s 192.168.78.0/24 -m conntrack --ctstate NEW -j ACCEPT
+sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -t nat -F POSTROUTING
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+```

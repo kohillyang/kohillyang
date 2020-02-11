@@ -868,7 +868,7 @@ PS:  windows的ruyistudio有一整套的mapper， 不用安装。
 使用XVFB可以和Vncserver搭配出临时的远程桌面，参见：
 <https://www.jianshu.com/p/ca48dd05ef7f>
 
-### Openvpn Tap 模式
+### Openvpn TUM 模式
 server.conf:
 先用apt install openvpn安装openvpn，再从openvpn的github主页下载easyrsa2.2.2生成下面的文件：
 ```
@@ -878,6 +878,7 @@ key /root/openvpn/EasyRSA-2.2.2/keys/server.key
 dh /root/openvpn/EasyRSA-2.2.2/keys/dh2048.pem
 ```
 
+创建一个server.conf，内容如下，
 ```bash
 port 1194 #- port
 proto udp #- protocol
@@ -906,9 +907,9 @@ status 1194.log
 verb 3
 ```
 
-client1.ovpn
+在客户端上（win）创建一个client1.ovpn,内容如下：
+
 ```
-client client1
 dev tun
 proto udp
 remote 101.37.81.143 1194
@@ -921,13 +922,18 @@ verb 3
 ca "C://Users/kohil/Desktop/ov/ca.crt"
 cert "C://Users/kohil/Desktop/ov/client1.crt"
 key "C://Users/kohil/Desktop/ov/client1.key"
+tls-client
 ```
+
+注意要在安全组里开放opennvpn的1194端口，随后在服务器上使用openvpn server.conf开启openvpn服务端，在客户端上导入上述client.ovpn 后即可连接。
+
+注意客户端版本要与服务端一致。
 
 ### Openvpn Tap 模式
 直接按官网的tutorial会上不了网，有两个解决办法，一个办法参照<http://keyvanfatehi.com/2016/02/10/How-to-setup-OpenVPN-with-TAP-bridging-on-Ubuntu-14-04/>
 
-另外一种办法：
-首先创建一个虚拟网卡：
+另外一种办法，这种办法不依赖于外网的配置，比较推荐：
+假定我们创建一个子网192.168.78.x，网关是服务器上的192.168.78.1，首先创建一个虚拟网卡：
 ```sh
 #!/bin/bash
 USER="root"
@@ -986,7 +992,8 @@ ifconfig $br $eth_ip netmask $eth_netmask broadcast $eth_broadcast
 ···
 
 更改server.conf，设置为tap模式：
-```
+
+```bash
 port 1194
 proto udp
 server-bridge 192.168.78.1 255.255.255.0 192.168.78.128 192.168.78.254
@@ -1017,7 +1024,8 @@ client-to-client
 ```
 
 在本地windows10 上安装OpenVPN 2.4，新建一个配置项，然后导入：
-```
+
+```bash
 dev tap
 proto udp
 remote 101.37.81.143 1194
@@ -1032,9 +1040,9 @@ tls-client
 ```
 
 安装后会在网络设备管理器里多一个Tap设备，将其更改为tap-bridge，并手动设置ip和网关。
-<img src="{{ site.cdn_prefix }}/screenshots/2020-02-10-18-10-48.png" class="img-ressponssive" style="width: 90%;margin-left: 3%">
+<img src="{{ site.github_cdn_prefix }}/screenshots/2020-02-10-18-10-48.png" class="img-ressponssive" style="width: 90%;margin-left: 3%">
 
-<img src="{{ site.cdn_prefix }}/screenshots/2020-02-10-18-11-33.png" class="img-ressponssive" style="width: 90%;margin-left: 3%">
+<img src="{{ site.github_cdn_prefix }}/screenshots/2020-02-10-18-11-33.png" class="img-ressponssive" style="width: 90%;margin-left: 3%">
 
 设置nat让从vpn访问外网(来自<https://www.cnblogs.com/Security-Darren/p/4576731.html>)：
 ```

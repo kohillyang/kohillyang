@@ -101,3 +101,25 @@ In short, the steps are:
 论证了知识蒸馏+标签平滑是有用的，具体做法就是用硬标签先生成一个老师模型，再控制温度，训练一个基于软标签（label smoothing）的学生模型。因为之前的迁移学习、模型压缩不知道怎么把两种方法结合起来用，这篇paper提供了详尽的实验参考数据。
 
 
+### Single-Stage Multi-Person Pose Machines
+这是一篇One Stage 做姿态估计的文章，跟Realtime Multi-Person 2D Pose Estimation using Part Affinit Fields 类似， 不同点在于：
+1. 它使用了Hourglass Network.
+2. 它回归的内容为：Root joint Gaussian Heatmap, Normalized Displacements between the keypoints and the root joints.
+
+如下图所示：
+<img src="{{ site.github_cdn_prefix }}/screenshots/2020-02-13-17-55-48.png" class="img-ressponssive" style="width: 60%;margin-left: 3%">
+
+
+对于第一个Target，就是普通的高斯Heatmap，这与大家回归普通关键点的方法一致。
+
+对于第二个Target, 对于SMP， 是对图中的每个Person，先找到其Root Joints, 然后在Root Joints的范围是到当前点目标关键点的差，其他地方用mask不计算loss(这一点不确定)。HSMP类似。
+
+然后就是实验结果：
+
+<img src="{{ site.github_cdn_prefix }}/screenshots/2020-02-13-17-29-50.png" class="img-ressponssive" style="width: 60%;margin-left: 3%">
+
+这个实验结果本身存疑，其中的时间是58ms，这大概是Hourglass单次前传的时间，其中的PAF单次前传的时间大概在40ms+, mAP也在40+，但是这个Paper报告的PAF的是多尺度前传的时间（明显这样对比是不公平的）
+
+
+
+

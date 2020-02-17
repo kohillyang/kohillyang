@@ -148,3 +148,105 @@ $$
 <http://www.pointclouds.org/assets/files/presentations/ICCV2011-surface.pdf>
 
 <img src="{{ site.github_cdn_prefix }}/screenshots/2020-01-31-00-33-50.png" class="img-responsive" style="width:80%;margin-left:2%"/><br>
+
+两张图片拼接代码：
+```python
+import cv2 as cv
+import cv2
+import numpy as np
+box = cv.imread("/data3/zyx/yks/eclipse_workspace/moving_dlt/left/2000.jpg");
+box = np.rot90(box, 1)
+box_in_sence = cv.imread("/data3/zyx/yks/eclipse_workspace/moving_dlt/left/2144.jpg");
+box_in_sence = np.rot90(box_in_sence, 1)
+
+cv.imshow("box", box)
+cv.imshow("box_in_sence", box_in_sence)
+
+# ??ORB?????
+orb = cv.ORB_create()
+kp1, des1 = orb.detectAndCompute(box,None)
+kp2, des2 = orb.detectAndCompute(box_in_sence,None)
+
+canvas = box.copy()
+result_kp0 = cv.drawKeypoints(canvas, kp1, None, -1, cv.DrawMatchesFlags_DEFAULT)
+cv.imwrite("result_kp0.jpg", result_kp0)
+canvas = box_in_sence.copy()
+result_kp1 = cv.drawKeypoints(canvas, kp2, None, -1, cv.DrawMatchesFlags_DEFAULT)
+cv.imwrite("result_kp1.jpg", result_kp1)
+
+# ???? ?????????
+# FLANN_INDEX_KDTREE = 1
+# index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
+# search_params = dict(checks = 50)
+# flann = cv.FlannBasedMatcher(index_params, search_params)
+# matches = flann.knnMatch(des1,des2,k=2)
+
+bf = cv.BFMatcher(cv.NORM_HAMMING, crossCheck=True)
+matches = bf.match(des1,des2)
+
+good = matches
+# for m,n in matches:
+#     if m.distance < 0.7*n.distance:
+#         good.append(m)
+img1 = box
+img2 = box_in_sence
+src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
+dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
+M, mask = cv.findHomography(src_pts, dst_pts, cv.RANSAC,5.0)
+matchesMask = mask.ravel().tolist()
+h,w,d = img1.shape
+pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
+dst = cv.perspectiveTransform(pts,M)
+img2 = cv.polylines(img2,[np.int32(dst)],True,255,3, cv.LINE_AA)
+cv.imshow("img2", img2)
+
+
+def create_mask(img1, img2, version):
+    height_img1 = img1.shape[0]
+    width_img1 = img1.shape[1]
+    width_img2 = img2.shape[1]
+    height_panorama = height_img1
+    width_panorama = width_img1 + width_img2
+    offset = int(200 / 2)
+    barrier = img1.shape[1] - int(200 / 2)
+    mask = np.zeros((height_panorama, width_panorama))
+    if version == 'left_image':
+        mask[:, barrier - offset:barrier + offset] = np.tile(np.linspace(1, 0, 2 * offset).T, (height_panorama, 1))
+        mask[:, :barrier - offset] = 1
+    else:
+        mask[:, barrier - offset:barrier + offset] = np.tile(np.linspace(0, 1, 2 * offset).T, (height_panorama, 1))
+        mask[:, barrier + offset:] = 1
+    return cv2.merge([mask, mask, mask])
+
+def blending(H, img1, img2):
+    # H = self.registration(img1, img2)
+    height_img1 = img1.shape[0]
+    width_img1 = img1.shape[1]
+    width_img2 = img2.shape[1]
+    height_panorama = height_img1
+    width_panorama = width_img1 + width_img2
+
+    panorama1 = np.zeros((height_panorama, width_panorama, 3))
+    mask1 = create_mask(img1, img2, version='left_image')
+    panorama1[0:img1.shape[0], 0:img1.shape[1], :] = img1
+    panorama1 *= mask1
+    mask2 = create_mask(img1, img2, version='right_image')
+    panorama2 = cv2.warpPerspective(img2, H, (width_panorama, height_panorama)) * mask2
+    result = panorama1 + panorama2
+
+    rows, cols = np.where(result[:, :, 0] != 0)
+    min_row, max_row = min(rows), max(rows) + 1
+    min_col, max_col = min(cols), max(cols) + 1
+    final_result = result[min_row:max_row, min_col:max_col, :]
+    return final_result
+
+stitched = blending(M, box_in_sence.copy(), box.copy())
+cv.imshow("", stitched.astype(np.uint8))
+cv.waitKey(0)
+# ????
+result = cv.drawMatches(box, kp1, box_in_sence, kp2, matches, None)
+cv.imwrite("match.png", result)
+cv.imshow("orb-match", result)
+cv.waitKey(0)
+cv.destroyAllWindows()
+```

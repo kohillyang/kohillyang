@@ -8,6 +8,7 @@ categories: 杂文
 permalink: /image_stitch
 ---
 <br>
+
 ### libelas
     给定两张图片，这个库可以给出视差图
 

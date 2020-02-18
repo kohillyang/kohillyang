@@ -30,8 +30,7 @@ VINS-Mono
 论文链接 <https://projects.ics.forth.gr/_publications/0201-P0401-lourakis-levenberg.pdf>
 
 
-非线性最小二乘
---------------
+### 非线性最小二乘
 
 对于一个最小二乘问题,注意$\mathbf{W}$为对称矩阵： 
 
@@ -121,5 +120,9 @@ In short, the steps are:
 这个实验结果本身存疑，其中的时间是58ms，这大概是Hourglass单次前传的时间，其中的PAF单次前传的时间大概在40ms+, mAP也在40+，但是这个Paper报告的PAF的是多尺度前传的时间（明显这样对比是不公平的）
 
 
+### As-Projective-As-Possible Image Stitchingwith Moving DLT
+使用单应性变换拼接图像的文章，据说是最早引入网格的文章之一，是后面的AANAP(Adaptive as-natural-as-possible image stitching)的基础，核心是用下面的滑动窗口最小二乘来描述图像之间的变换：
 
-
+$$
+    \mathbf{H}_* = \arg \min_\mathbf{h}\sum_{1}^{N}\parallel w_*^i \mathbf{A}_i \mathbf{h} \parallel \ s.t. \parallel\mathbf{h}\parallel = 1
+$$

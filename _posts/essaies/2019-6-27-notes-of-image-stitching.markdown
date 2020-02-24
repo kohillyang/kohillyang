@@ -9,6 +9,22 @@ permalink: /image_stitch
 ---
 <br>
 
+### 最终拼接结果
+原始图像：
+<img src="{{ site.github_cdn_prefix }}/stitch/2000.jpg" class="img-responsive" style="width:50%;margin-left:2%"/><br>
+<img src="{{ site.github_cdn_prefix }}/stitch/2107.jpg" class="img-responsive" style="width:50%;margin-left:2%"/><br>
+<img src="{{ site.github_cdn_prefix }}/stitch/2324.jpg" class="img-responsive" style="width:50%;margin-left:2%"/><br>
+
+使用ps的拼接结果：
+<img src="{{ site.github_cdn_prefix }}/stitch/results3.png" class="img-responsive" style="width:50%;margin-left:2%"/><br>
+
+使用基于稠密重建的方法：
+<img src="{{ site.github_cdn_prefix }}/stitch/stitched_naive.jpg" class="img-responsive" style="width:50%;margin-left:2%"/><br>
+
+使用基于稠密重建+光线追踪进行碰撞检测的办法：
+<img src="{{ site.github_cdn_prefix }}/stitch/stitched_ray_tracing.jpg" class="img-responsive" style="width:50%;margin-left:2%"/><br>
+
+
 ### libelas
     给定两张图片，这个库可以给出视差图
 
@@ -73,51 +89,6 @@ def triangulatePoints(list_of_re_projection_matrix, list_of_mn):
 ### 开源代码
 `1` 2016 STOF: [colmap](https://github.com/colmap/colmap)， [论文链接](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Schonberger_Structure-From-Motion_Revisited_CVPR_2016_paper.pdf)<br>
 `2`. [OpenPano](https://github.com/ppwwyyxx/OpenPano)
-
-
-### 相机位姿的另外一种解法
-考虑相机模型：
-$$s_0p_0=KP \\ s_1p_1=K(RT+P)   $$<br>
-上式的几何意义是在空间中的一条直线，直线在空间中的自由度为5，因此，上式可改写成：<br>
-$$
-    \begin{cases}
-        x_0 = s_0 \times sin\theta_0 cos \phi_0 \\
-        y_0 = s_0 \times sin \theta_0 sin \phi_0  \\
-        z_0 = s_0 \times cos \theta_0       
-    \end{cases}
-$$
-<br>
-$$
-    \begin{cases}
-        x_1 = \Delta x + s_1 \times sin(\theta_1 + \Delta \theta) cos (\phi_1 + \Delta \phi) \\
-        y_1 = \Delta y + s_1 \times sin(\theta_1 + \Delta \theta) sin (\phi_1 + \Delta \phi)  \\
-        z_1 = \Delta z + s_1 \times cos (\theta_1 + \Delta \theta)       
-    \end{cases}
-$$
-
-假设两幅图像共$K$个匹配的关键点，记$D_k$为如下的矩阵：<br>
-$$
-D_k = \left[ \begin{matrix}
-    sin\theta_0 cos \phi_0                                   & sin \theta_0 sin \phi_0                                  & cos \theta_0  \\
-    sin(\theta_1 + \Delta \theta)cos (\phi_1 + \Delta \phi)  & sin(\theta_1 + \Delta \theta) sin (\phi_1 + \Delta \phi) & cos (\theta_1 + \Delta \theta)  \\
-    \Delta x                                                 & \Delta y                                                 & \Delta z
-\end{matrix} \right]
-$$
-<br>
-则\ref{equa:camera_line0}和\ref{equa:camera_line1}两条直线的距离为:<br>
-$$
-d_k = |det(D_k)|    
-$$
-
-直观上来讲，上式所表示的物理意义为： 空间中的两条直线，若它们相交，则距离一定为0，与其交点无关；若不相交，则其公垂线段的中点与公垂线段的长度无关。<br>
-
-对于共$K$个匹配对的情况，我们希望求出来的相机位姿能最小化$\sum_{k=1}^K d_k^2$。<br>
-对式子\ref{equa:2_15}展开：<br>
-$$
-D_k = sin\theta_0 cos \phi_0 \times sin(\theta_1 + \Delta \theta) sin (\phi_1 + \Delta \phi) \times \Delta z - sin\theta_0 cos \phi_0 \times \Delta y \times cos (\theta_1 + \Delta \theta)\\
-    - sin \theta_0 sin \phi_0 sin(\theta_1 + \Delta \theta)cos (\phi_1 + \Delta \phi) \Delta z +  sin \theta_0 sin \phi_0 \times \Delta x \times cos (\theta_1 + \Delta \theta) \\
-    +   cos \theta_0 sin(\theta_1 + \Delta \theta)cos (\phi_1 + \Delta \phi) \Delta y -  cos \theta_0  \Delta x  sin(\theta_1 + \Delta \theta) sin (\phi_1 + \Delta \phi) 
-$$
 
 
 ### Jau 30th 结果

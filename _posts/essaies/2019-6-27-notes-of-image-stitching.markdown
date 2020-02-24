@@ -22,73 +22,7 @@ permalink: /image_stitch
 <img src="{{ site.github_cdn_prefix }}/stitch/stitched_naive.jpg" class="img-responsive" style="width:50%;margin-left:2%"/><br>
 
 使用基于稠密重建+光线追踪进行碰撞检测的办法：
-<img src="{{ site.github_cdn_prefix }}/stitch/stitched_ray_tracing.jpg" class="img-responsive" style="width:50%;margin-left:2%"/><br>
-
-
-### libelas
-    给定两张图片，这个库可以给出视差图
-
-### 多视图几何参考书籍：
-    参考https://zhuanlan.zhihu.com/p/34995102
-	《Multiple View Geometry in Computer Vision (Second Edition)》
-	
-###  状态估计参考论文
-	state estimation for robotics
-
-### 三维空间优化
-	Lie groups, Lie algebras, projective geometry and optimization for 3D Geometry, Engineering and Computer Vision
-
-### 四元数动力学
-	https://arxiv.org/pdf/1711.02508.pdf
-	Quaternion kinematics for the error-state Kalman filter
-
-### Optimal Ray Intersection For Computing 3D Points From N-View Correspondences
-Optimal Ray Intersection For Computing 3D Points From N-View Correspondences
-
-Python 实现代码：
-```Python
-def triangulatePoints(list_of_re_projection_matrix, list_of_mn):
-    # type: ([np.ndarray], [np.ndarray]) -> np.ndarray
-    sum_A = np.zeros(shape=(3, 3))
-    sum_b = np.zeros(shape=(3, 1))
-    for J, mn in zip(list_of_re_projection_matrix, list_of_mn):
-        assert J.shape == (3, 4)
-        assert mn.shape == (2, 1)
-        mn_homo = np.ones(shape=(3, 1))
-        mn_homo[:2, :] = mn[:2, :]
-        KR = J[:3, :3]
-        KR_inv = np.linalg.inv(KR)
-        Kt = J[:3, 3:4]
-        l = KR_inv.dot(mn_homo)
-        l = l / np.sqrt(np.sum(l ** 2))
-        q = -1 * KR_inv.dot(Kt)
-        a = l[0].squeeze().tolist()
-        b = l[1].squeeze().tolist()
-        c = l[2].squeeze().tolist()
-        x = q[0].squeeze().tolist()
-        y = q[1].squeeze().tolist()
-        z = q[2].squeeze().tolist()
-        sum_A += np.array([[1 - a ** 2, -1 * a * b, -1 * a * c],
-                           [-1 * a * b, 1 - b ** 2, -1 * b * c],
-                           [-1 * a * c, -1 * b * c, 1 - c ** 2]])
-        sum_b += np.array([[(1 - a ** 2) * x - a * b * y - a * c * z],
-                           [-1 * a * b * x + (1 - b ** 2) * y - b * c * z],
-                           [-1 * a * c * x - b * c * y + (1 - c ** 2) * z]])
-    x = np.linalg.inv(sum_A).dot(sum_b)
-    return x
-```
-
-### 经典论文
-`1`. <http://matthewalunbrown.com/papers/ijcv2007.pdf>
-
-### SFM常用软件
-`1`. pmvs<br>
-`2`. Smart3D <http://www.zhdrtk.com/3528.html>
-
-
-### 开源代码
-`1` 2016 STOF: [colmap](https://github.com/colmap/colmap)， [论文链接](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Schonberger_Structure-From-Motion_Revisited_CVPR_2016_paper.pdf)<br>
-`2`. [OpenPano](https://github.com/ppwwyyxx/OpenPano)
+<img src="{{ site.github_cdn_prefix }}/stitch/stitched.jpg" class="img-responsive" style="width:50%;margin-left:2%"/><br>
 
 
 ### Jau 30th 结果
@@ -222,3 +156,68 @@ cv.imshow("orb-match", result)
 cv.waitKey(0)
 cv.destroyAllWindows()
 ```
+
+### libelas
+    给定两张图片，这个库可以给出视差图
+
+### 多视图几何参考书籍：
+    参考https://zhuanlan.zhihu.com/p/34995102
+	《Multiple View Geometry in Computer Vision (Second Edition)》
+	
+###  状态估计参考论文
+	state estimation for robotics
+
+### 三维空间优化
+	Lie groups, Lie algebras, projective geometry and optimization for 3D Geometry, Engineering and Computer Vision
+
+### 四元数动力学
+	https://arxiv.org/pdf/1711.02508.pdf
+	Quaternion kinematics for the error-state Kalman filter
+
+### Optimal Ray Intersection For Computing 3D Points From N-View Correspondences
+Optimal Ray Intersection For Computing 3D Points From N-View Correspondences
+
+Python 实现代码：
+```Python
+def triangulatePoints(list_of_re_projection_matrix, list_of_mn):
+    # type: ([np.ndarray], [np.ndarray]) -> np.ndarray
+    sum_A = np.zeros(shape=(3, 3))
+    sum_b = np.zeros(shape=(3, 1))
+    for J, mn in zip(list_of_re_projection_matrix, list_of_mn):
+        assert J.shape == (3, 4)
+        assert mn.shape == (2, 1)
+        mn_homo = np.ones(shape=(3, 1))
+        mn_homo[:2, :] = mn[:2, :]
+        KR = J[:3, :3]
+        KR_inv = np.linalg.inv(KR)
+        Kt = J[:3, 3:4]
+        l = KR_inv.dot(mn_homo)
+        l = l / np.sqrt(np.sum(l ** 2))
+        q = -1 * KR_inv.dot(Kt)
+        a = l[0].squeeze().tolist()
+        b = l[1].squeeze().tolist()
+        c = l[2].squeeze().tolist()
+        x = q[0].squeeze().tolist()
+        y = q[1].squeeze().tolist()
+        z = q[2].squeeze().tolist()
+        sum_A += np.array([[1 - a ** 2, -1 * a * b, -1 * a * c],
+                           [-1 * a * b, 1 - b ** 2, -1 * b * c],
+                           [-1 * a * c, -1 * b * c, 1 - c ** 2]])
+        sum_b += np.array([[(1 - a ** 2) * x - a * b * y - a * c * z],
+                           [-1 * a * b * x + (1 - b ** 2) * y - b * c * z],
+                           [-1 * a * c * x - b * c * y + (1 - c ** 2) * z]])
+    x = np.linalg.inv(sum_A).dot(sum_b)
+    return x
+```
+
+### 经典论文
+`1`. <http://matthewalunbrown.com/papers/ijcv2007.pdf>
+
+### SFM常用软件
+`1`. pmvs<br>
+`2`. Smart3D <http://www.zhdrtk.com/3528.html>
+
+
+### 开源代码
+`1` 2016 STOF: [colmap](https://github.com/colmap/colmap)， [论文链接](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Schonberger_Structure-From-Motion_Revisited_CVPR_2016_paper.pdf)<br>
+`2`. [OpenPano](https://github.com/ppwwyyxx/OpenPano)

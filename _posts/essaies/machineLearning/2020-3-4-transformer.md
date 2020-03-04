@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Notes of mxnet
+title: Notes of transformer
 date: 2019-3-4 10:24
 comments: true
 permalink: /transformer

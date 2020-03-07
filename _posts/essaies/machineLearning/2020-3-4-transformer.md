@@ -6,17 +6,21 @@ comments: true
 permalink: /transformer
 categories: machine-learning
 ---
-
+<br>
 整体框架：
+
 <img src="{{ site.github_cdn_prefix }}/transformer/Total.svg" class="img-responsive"/>
 
 编码器：
+
 <img src="{{ site.github_cdn_prefix }}/transformer/Encoder_layer.svg" class="img-responsive"/>
 
 解码器：
+
 <img src="{{ site.github_cdn_prefix }}/transformer/Decoder_layer.svg" class="img-responsive"/>
 
 Attention:
+
 <img src="{{ site.github_cdn_prefix }}/transformer/Attention.svg" class="img-responsive"/>
 
 

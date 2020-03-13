@@ -33,5 +33,10 @@ Attention:
 7. Double Check beam search
 8. Model Average
 9. 金字塔，多个尺度拼接成一张图片往里面送
+10. Embedding 使用Normal(0, 1/sqrt(len(dim))) 初始化而不是Xavier(Ps. Embedding 目前使用的mxnet的自带默认初始化方法，并不是用的Xavier)
+11. Deformable
+12. 相关位置Encoding https://arxiv.org/pdf/1803.02155.pdf， PS：多尺度不work的原因很可能与该文章有关。
+
+
 ? beam search算分数的时候，需要考虑到<END>
 当出现<END>时，分数乘以1而不是当前分数

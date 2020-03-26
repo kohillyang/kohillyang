@@ -126,3 +126,110 @@ In short, the steps are:
 $$
     \mathbf{H}_* = \arg \min_\mathbf{h}\sum_{1}^{N}\parallel w_*^i \mathbf{A}_i \mathbf{h} \parallel \ s.t. \parallel\mathbf{h}\parallel = 1
 $$
+
+### 目标检测Reading list
+1. cascade RCNN
+2. 1st Place Solutions for OpenImage2019 - Object Detection and Instance Segmentation
+3. IOU-Net
+4. PrROI-Pooling
+5. Double-Head RCNN
+6. Double-Head-Ext
+7. RefineDet
+8. Reppoints / DCN v3
+9. AlignDet
+
+### Attention Is All You Need
+论文链接：https://arxiv.org/abs/1706.03762
+
+大名鼎鼎的Transformer， 笔记见<http://notes.kohill.cn/transformer>
+
+### Self-Attention with Relative Position Representations
+一篇基于Transformer 的论文
+
+文章声称绝对位置是没有用的，相对位置更为重要，因此用相对位置编码而不是绝对位置编码，原始的Transformer的Attention如下：
+
+$$z_{i}=\sum_{j=1}^{n} \alpha_{i j}\left(x_{j} W^{V}\right)$$
+
+$$\alpha_{i j}=\frac{\exp e_{i j}}{\sum_{k=1}^{n} \exp e_{i k}}$$
+
+$$ e_{i j}=\frac{\left(x_{i} W^{Q}\right)\left(x_{j} W^{K}\right)^{T}}{\sqrt{d_{z}}}$$
+
+修改后的Attention 结构变为：
+
+$$z_{i}=\sum_{j=1}^{n} \alpha_{i j}\left(x_{j} W^{V}+a_{i j}^{V}\right)$$
+
+$$e_{i j}=\frac{x_{i} W^{Q}\left(x_{j} W^{K}+a_{i j}^{K}\right)^{T}}{\sqrt{d_{z}}}$$
+
+其中$a_{i,j}^K$即位置编码，它与当前位置与其它位置的位置差有关，论文对这个相对位置做了clip，即
+相对位置最大为8，超过8会被clip为8：
+
+<img src="{{ site.github_cdn_prefix }}/transformer/2020-03-13-15-36-12.png" class="img-responsive"/>
+
+对于$a_{i,j}^K$的学习，论文没有提怎么学的，但是目测就是靠一个embedding layer 学的。
+
+具体实现的时候，self-attention 分别为Q和V，对于Q如下：
+```python
+        mul_left = mul_left[:, :, :, np.newaxis]  # (2, 8, 256, 1, 64)
+        delta_x_embedded = delta_x_embedded.transpose((0, 1, 3, 2, 4))  # (2, 8, 256, 64, 256)
+        delta_x_array = self.batch_dot(mul_left, delta_x_embedded).squeeze()
+
+        delta_y_embedded = delta_y_embedded.transpose((0, 1, 3, 2, 4))  # (2, 8, 256, 64, 256)
+        delta_y_array = self.batch_dot(mul_left, delta_y_embedded).squeeze()
+```
+
+对于V如下：
+
+```python
+        mul_left = mul_left[:, :, :, np.newaxis]
+        delta_x_array = self.batch_dot(mul_left, delta_x_embedded).squeeze()
+        delta_y_array = self.batch_dot(mul_left, delta_y_embedded).squeeze()
+```
+
+但有两点存疑：
+1. 原文说学习一个$a_{i j}^{V}$，但是不清楚这个$a_{i j}^{V}$怎么来的（我是直接用一个nn.Embedding）。
+2. 原文说overhead只有7%，但是我测下来，在每一个Encoder Layer上加一个position embedding 的开销相当大，
+在只在第一个层和第二个层加入Relative Positio
+n Embedding的情况下，训练速度只有原来的1/4，前传速度只有原来的1/25
+
+### Character-Level Language Modeling with Deeper Self-Attention
+论文链接：<https://www.aaai.org/ojs/index.php/AAAI/article/download/4182/4060>
+
+文章对Transformer 架构做了一些改动
+1. 增加了三个loss (序列的中间位置， hidden representations and multiple steps at target sequence in the future.) <br>
+(1). Multiple Positions<br>
+原文说transformer 只对最后一个单词算了loss，然后它改成了对每个位置都预测并且对每个位置都算loss(难道不应该本来就是这样子的嘛，很奇怪)
+，该策略的增益为1.42，是所有策略中最大的<br>
+(2) Intermedia Layer Losses<br>
+就是让每一个Transformer layer 都直接预测序列，然后对于第$l^{th}$个中间层，若共有n个中间层，则在l/2n \times N个迭代周期后该中间层的loss 权重被置为0，也就是说，当训练进行到一半时，所有的中间层的loss都为0.， 该策略的增益为0.096<br>
+(3) Multiple Targets<br>
+网络同时预测多个目标，即再加一个fc同时预测下下一个字符，增益为0.006
+
+有一点存疑：
+训练的时候说是固定了512个字符，显然512是指Taget的长度，那么src的长度呢？
+
+
+### Transformer-XL: Attentive Language ModelsBeyond a Fixed-Length Context
+论文链接：<https://arxiv.org/pdf/1901.02860.pdf> <br>
+代码链接：<https://github.com/kimiyoung/transformer-xl>
+
+这篇文章主要diss的对象是<AAAI上的论文 Character-Level Language Modeling with Deeper Self-Attention>, 后者在训练的时候在语料库中随机采样固定长度的序列, 在前传的时候以滑动窗口的形式预测下一个字符。因为没有状态重用，每次预测的时候有很多重复计算。
+
+
+这篇文章采用分段的形式，例如第一段的$h_1$，维度为(bs, seq_len, 512)，第二层concat上一段输出的隐含层,得到(bs, 2xseq_len, 512)的隐含状态，<font color=red>把上一段的第n层与当前段的第n+1层concat的好处是不用处理初始状态的问题</font>，此时网络可以公用上一段的信息，从而加速预测。
+
+另外文章的一个观点是不能使用绝对位置编码（实际上文章的意思是段内的相对位置编码，不是整个输入的绝对位置编码）。此时不同段的相同位置的位置编码一致，因此会有问题。因此文章使用相对位置编码，注意此时Self Attention/Src Attention的输入包含上一段的信息，例如$x_{-1}, x_{-2}$, x1,x2是第一段的信息，x3,x4是第二段的信息，x4在计算相对位置编码的时候，对x3的相对位置是-1, 对x2的相对位置编码为-2, 对x1的相对位置编码是-3，默认情况下，并不会送入$x_{-1}, x_{-2}$。因此解决了位置编码confusing的问题。
+
+此外，这篇文章对Self-Attention with Relative Position Representations这篇文章里的相对位置编码做了进一步改动，原始Transformer里的Attention Score为：
+
+<img src="{{ site.github_cdn_prefix }}/transformer/2020-03-28-21-19-59.png" class="img-responsive"/>
+
+
+其中$\mathbf{E}_{x_i}$是单词${x_i}$的embedding向量, $\mathbf{U}_j和\mathbf{U}_j$即位置编码。<br>
+文章把它变为：
+
+<img src="{{ site.github_cdn_prefix }}/transformer/2020-03-28-21-26-23.png" class="img-responsive"/>
+
+
+其中$u^{\top}$为待学习的参数（向量），$\mathbf{R}_{i-j}$即相对位置编码，按文章的意思，上述每一项都有它的直观含义：
+
+> Under  the  new  parameterization,  each  term  hasan intuitive meaning: term(a)represents content-based  addressing,  term(b)captures  a  content-dependent  positional  bias,   term(c)governs  aglobal content bias, and(d)encodes a global po-sitional bias.

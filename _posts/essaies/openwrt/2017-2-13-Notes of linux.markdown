@@ -1051,3 +1051,35 @@ sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 sudo iptables -t nat -F POSTROUTING
 sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 ```
+
+### 离线安装dokcer-ce
+`1`. 首先找一台能联网的电脑，配置docker-ce源，然后使用下面的命令下载所有的依赖包：
+
+```bash
+# apt-get download $(apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances docker-ce docker-ce-cli containerd.io git | grep "^\w" | sort -u)
+apt-get download $(apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances docker-ce docker-ce-cli containerd.io git aufs-tools cgroupfs-mount cgroup-lite pigz | grep "^\w" | sort -u)
+```
+
+
+`2`. 把上述所有包复制到目标机器上
+
+`3`. 在目标机器上将当前目录中的包建立索引，伪装成一个源，然后添加到sources.lst中，另外需要手动检查`/etc/apt/sources.list`文件，确保其不包含docker的源。
+```bash
+dpkg-scanpackages . | gzip -c9 > Packages.gz
+echo "deb [trusted=yes] file://`pwd` ./" | sudo tee -a /etc/apt/sources.list
+sudo apt update
+```
+
+`4`. 在目标机器上使用下面的命令安装docker-ce
+```bash
+sudo apt-get install --no-install-recommends git docker-ce docker-ce-cli containerd.io
+```
+`5`. 另外部分机器需要升级docker-compose。
+在源机器上使用下面的命令安装最新的docker-compose:
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+因此，把上述文件复制一份到目标机器便可以：
+
+

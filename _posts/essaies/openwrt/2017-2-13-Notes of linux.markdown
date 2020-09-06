@@ -927,7 +927,6 @@ tls-client
 
 注意要在安全组里开放opennvpn的1194端口，随后在服务器上使用openvpn server.conf开启openvpn服务端，在客户端上导入上述client.ovpn 后即可连接。
 
-注意客户端版本要与服务端一致。
 
 ### Openvpn Tap 模式
 直接按官网的tutorial会上不了网，有两个解决办法，一个办法参照<http://keyvanfatehi.com/2016/02/10/How-to-setup-OpenVPN-with-TAP-bridging-on-Ubuntu-14-04/>
@@ -1039,6 +1038,15 @@ key "C://Users/kohil/Desktop/ov/client2.key"
 tls-client
 ```
 
+如果失败，可以尝试以下几点：
+```
+1. 注意客户端版本要与服务端一致。
+2. 客户端和服务端都删除comp-lzo选项
+3. Ip设置一致
+4. 客户端配置文件中设置dev tap而不是dev tap-bridge
+```
+
+
 安装后会在网络设备管理器里多一个Tap设备，将其更改为tap-bridge，并手动设置ip和网关。
 <img src="{{ site.github_cdn_prefix }}/screenshots/2020-02-10-18-10-48.png" class="img-ressponssive" style="width: 90%;margin-left: 3%">
 
@@ -1051,6 +1059,8 @@ sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 sudo iptables -t nat -F POSTROUTING
 sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 ```
+
+
 
 ### 离线安装dokcer-ce
 `1`. 首先找一台能联网的电脑，配置docker-ce源，然后使用下面的命令下载所有的依赖包：
